@@ -61,9 +61,11 @@ make clean
 ### 2. Install PLUTO-SIROCCO v4.4.3
 
 ```bash
-git clone https://github.com/aminmosallanezhad/PLUTO-SIROCCO.git
-# Unzip if downloaded manually, and rename the folder to PLUTO
+git clone https://github.com/sirocco-rt/pluto-sirocco.git
 ```
+
+> If you downloaded the `.zip` file manually, unzip it and **rename the extracted folder to `PLUTO`** for consistency with environment variables used in the rest of this guide.
+
 
 **Update your environment:**
 ```bash
