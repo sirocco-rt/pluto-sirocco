@@ -2,18 +2,34 @@
 
 **Monte Carlo Radiation Hydrodynamics (MC-RHD) of Line-Driven Disk Winds**
 
-This repository provides a working version of PLUTO v4.4.3 modified to couple with the SIROCCO radiative transfer code and an external CAK solver to simulate line-driven winds from accretion disks.
+This repository contains a fully working and tested version of the **PLUTO v4.4.3** astrophysical fluid dynamics code that has been **custom-modified to interface with the SIROCCO radiative transfer engine** and a separate **CAK force multiplier solver**.
+
+Together, these components allow researchers to perform **radiation–hydrodynamics (RHD)** simulations of **line-driven disk winds** — a key physical mechanism thought to operate in accreting systems such as **active galactic nuclei (AGN)**, **cataclysmic variables**, and **young stellar objects**.
+
+### 🔬 Why Line-Driven Winds?
+
+In these systems, radiation from the central object (e.g. a black hole or white dwarf) interacts with partially ionized gas in the surrounding accretion disk. The radiation can be **absorbed and scattered by spectral lines**, transferring momentum and **launching powerful winds**. This process is known as **line driving**.
+
+### 🧠 What This Code Does
+
+This project implements a **modular, operator-split approach** to simulate such winds self-consistently:
+
+- **PLUTO** handles the hydrodynamic evolution of the gas (density, velocity, pressure, temperature).
+- **SIROCCO** performs frequency-dependent **Monte Carlo radiative transfer**, calculating the local radiation field and ionization states of the gas.
+- **CAK (Castor-Abbott-Klein)** solver calculates the **force multiplier** — a function that quantifies how much the radiation pressure is boosted due to line absorption.
+
+These three components are called in sequence at each radiation timestep, forming a coupled loop that models how radiation shapes the outflows from accretion disks.
+
+### ⚙️ Applications
+
+This framework is ideal for:
+- Studying **disc winds** in different ionization and radiation regimes
+- Investigating the **dynamics and launching conditions** of line-driven outflows
+- Simulating **feedback processes** in AGNs
+- Exploring radiation–hydrodynamic effects in **X-ray binaries**, **novae**, and **white dwarf accretion disks**
 
 ---
 
-## 🧩 Code Components
-
-- **PLUTO v4.4.3** — Handles hydrodynamics  
-- **SIROCCO** — Performs Monte Carlo radiative transfer  
-- **CAK** — Computes force multipliers  
-- **Python Scripts** — Coordinate sequential PLUTO-SIROCCO-CAK execution  
-
----
 
 ## 🔧 Installation Guide
 
