@@ -58,7 +58,7 @@ make clean
 
 ---
 
-### 2. Install PLUTO-SIROCCO v4.4.3
+### 2. Install PLUTO-SIROCCO v1.0
 
 ```bash
 git clone https://github.com/sirocco-rt/pluto-sirocco.git
