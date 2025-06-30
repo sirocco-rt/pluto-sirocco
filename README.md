@@ -1,4 +1,4 @@
-# PLUTO-SIROCCO v1.0
+# PLUTO-SIROCCO
 
 **Monte Carlo Radiation Hydrodynamics (MC-RHD) of Line-Driven Disc Winds**
 
