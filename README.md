@@ -1,35 +1,31 @@
 # PLUTO-SIROCCO v1.0
 
-**Monte Carlo Radiation Hydrodynamics (MC-RHD) of Line-Driven Disk Winds**
+**Monte Carlo Radiation Hydrodynamics (MC-RHD) of Line-Driven Disc Winds**
 
-This repository contains a fully working and tested version of the **PLUTO v4.4.3** astrophysical fluid dynamics code that has been **custom-modified to interface with the SIROCCO radiative transfer engine** and a separate **CAK force multiplier solver**.
+This repository contains a version of the PLUTO v4.4.3 astrophysical fluid dynamics code that has been custom-modified to interface with the SIROCCO radiative transfer code and a separate CAK force multiplier solver**. Together, this software should allow the user to perform radiation–hydrodynamics (RHD) simulations of line-driven disc winds (or in principle, radiative or thermal type of disc wind). 
 
-Together, these components allow researchers to perform **radiation–hydrodynamics (RHD)** simulations of **line-driven disk winds** — a key physical mechanism thought to operate in accreting systems such as **active galactic nuclei (AGN)**, **cataclysmic variables**, and **young stellar objects**.
-
-### 🔬 Why Line-Driven Winds?
-
-In these systems, radiation from the central object (e.g. a black hole or white dwarf) interacts with partially ionized gas in the surrounding accretion disk. The radiation can be **absorbed and scattered by spectral lines**, transferring momentum and **launching powerful winds**. This process is known as **line driving**.
-
-### 🧠 What This Code Does
-
-This project implements a **modular, operator-split approach** to simulate such winds self-consistently:
-
+We implement a modular, operator-split approach to simulate disc winds:
 - **PLUTO** handles the hydrodynamic evolution of the gas (density, velocity, pressure, temperature).
 - **SIROCCO** performs frequency-dependent **Monte Carlo radiative transfer**, calculating the local radiation field and ionization states of the gas.
 - **CAK (Castor-Abbott-Klein)** solver calculates the **force multiplier** — a function that quantifies how much the radiation pressure is boosted due to line absorption.
 
-These three components are called in sequence at each radiation timestep, forming a coupled loop that models how radiation shapes the outflows from accretion disks.
+These three modules are called in sequence at each radiation timestep, forming a coupled loop. For further detail, please consult the following papers:
 
-### ⚙️ Applications
+_Monte-Carlo radiation hydrodynamic simulations of line-driven disc winds: relaxing the isothermal approximation_, Mosallanezhad et al., MNRAS in press
 
-This framework is ideal for:
-- Studying **disc winds** in different ionization and radiation regimes
-- Investigating the **dynamics and launching conditions** of line-driven outflows
-- Simulating **feedback processes** in AGNs
-- Exploring radiation–hydrodynamic effects in **X-ray binaries**, **novae**, and **white dwarf accretion disks**
+_State-of-the-art simulations of line-driven accretion disc winds: realistic radiation hydrodynamics leads to weaker outflows_, Higginbottom, Scepi et al., MNRAS, Volume 527, Issue 3, pp.9236-9249, [arXiv:2312.06042](https://arxiv.org/abs/2312.06042)
+
+**Please cite these papers if you use the software, together with the [SIROCCO release paper](https://ui.adsabs.harvard.edu/abs/2025MNRAS.536..879M/abstract) and PLUTO code paper ([Mignone et al. 2007](https://ui.adsabs.harvard.edu/abs/2007ApJS..170..228M/abstract)).** 
+
+## ⚙️ Code Structure Summary
+
+- `cak_v3/` — `atomic_models.txt`, `transitiondata.txt`, `cak_v3` executable  
+- `pluto_sirocco_*.py` — Python drivers and control scripts  
+- `init.c`, `line_connect.c`, `cooling.c`, etc. — Custom PLUTO source code
+
+Setups for running models from Mosallanezhad et al. (including further parameter descriptions) can be found in `Test_Problems/LineDrivenWind`
 
 ---
-
 
 ## 🔧 Installation Guide
 
@@ -141,59 +137,13 @@ python3 ./pluto_sirocco_init.py
 
 ---
 
-## ⚙️ Code Structure Summary
-
-- `cak_v3/` — `atomic_models.txt`, `transitiondata.txt`, `cak_v3` executable  
-- `pluto_sirocco_*.py` — Python drivers and control scripts  
-- `init.c`, `line_connect.c`, `cooling.c`, etc. — Custom PLUTO source code
-
----
-
-## 📡 Running on Iridis HPC
-
-**Example Slurm Script (`job.slurm`):**
-```bash
-#!/bin/bash
-#SBATCH --nodes=1
-#SBATCH --ntasks=192
-#SBATCH --time=48:00:00
-#SBATCH --partition=highmem
-#SBATCH --mem=2500000M
-#SBATCH --job-name=idl_macro
-#SBATCH --output=idl_output.out
-#SBATCH --error=idl_error.err
-
-module load intel-mpi/2021.14
-export PLUTO_DIR=/home/am1f24/PLUTO
-export SIROCCO=/home/am1f24/sirocco
-export PATH=$SIROCCO/bin:$PATH
-source /iridisfs/i6software/conda/miniconda-py3/etc/profile.d/conda.sh
-conda activate myenv39
-
-python3 ./pluto_sirocco_dir_iso.py
-```
-
-**Submit job:**
-```bash
-sbatch job.slurm
-```
-
-**Monitor:**
-```bash
-myqueue
-```
-
-**Cancel:**
-```bash
-scancel JOBID
-```
-
----
-
 ## 👩‍💻 Contributors
 
-- Amin Mosallanezhad  
-- SIROCCO & PLUTO user community
+- Amin Mosallanezhad
+- Nicolas Scepi
+- Nick Higginbottom 
+- SIROCCO collaboration
+- PLUTO developers (see main PLUTO repository here) 
 
 ## 📄 License
 
