@@ -143,7 +143,7 @@ python3 ./pluto_sirocco_init.py
 - Nicolas Scepi
 - Nick Higginbottom 
 - SIROCCO collaboration
-- PLUTO developers (see main PLUTO repository here) 
+- PLUTO developers 
 
 ## 📄 License
 
