@@ -19,7 +19,7 @@
 
   \authors A. Mignone (andrea.mignone@unito.it)\n
            G. Muscianisi (g.muscianisi@cineca.it)
-  \date   Dec 04, 2019
+  \date   Nov 18, 2024
   \todo   Check if sb_vy and sb_Ly are really needed as global variables.
 */
 /* ///////////////////////////////////////////////////////////////////// */
@@ -77,6 +77,10 @@
 #ifndef SB_OMEGA
   #define SB_OMEGA   1.0 /**< Disk local orbital frequency \f$ \Omega_0 = 
                               \Omega(R_0)\f$.  */
+#endif
+
+#ifndef SB_STRATIFICATION
+  #define SB_STRATIFICATION NO  /**< Apply vertical component of gravity in Particles_Dust_Update(). */
 #endif
 
 extern double sb_vy;  /**< Velocity offset (>0), in SB_Boundary(). */ 

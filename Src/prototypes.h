@@ -22,7 +22,6 @@ void FreeAll();
 
 double BodyForcePotential(double, double, double);
 void   BodyForceVector(double *, double *, double, double, double);
-
 void   Boundary    (const Data *, int, Grid *);
 void   BoundaryConservative (const Data *, Grid *);
 
@@ -62,7 +61,7 @@ void  FreeArrayBox(double ***, long, long, long);
 void  FreeArrayBoxMap (double ***, int, int, int, int, int, int);
 void  FreeArrayMap (double ***);
 void  FreeArrayUint16_tMap(uint16_t ***);
-#ifdef FINITE_DIFFERENCE
+#ifdef FINITE_DIFFERENCE 
  Riemann_Solver FD_Flux;
  void FD_GetMaxEigenvalues (const Data *d, Sweep *sweep, Grid *grid);
 #endif
@@ -144,7 +143,7 @@ void   PeriodicBoundary (double ***, RBox *, int);
 
 void   PolarAxisBoundary(const Data *, RBox *, int);
 
-void   PrimToChar (double **, double *, double *);
+void   PrimToChar (double **, double *, double *); 
 void   PrimToCons3D(Data_Arr, Data_Arr, RBox *, Grid *);
 void   PrimToConsLoc (double *, double *);
 
@@ -209,12 +208,12 @@ void   StoreAMRFlux (double **, double **, int, int, int, int, int, Grid *);
 int    StringArrayIndex (char *str_arr[], int, char *);
 void   STS (const Data *d, double, timeStep *, Grid *);
 void   SymmetryCheck (Data_Arr, int, RBox *);
-void   SwapEndian (void *, const int);
+void   SwapEndian (void *, const int); 
 
 
 void UnsetJetDomain (const Data *, int, Grid *);
 void UpdateStage(Data *, Data_Arr, Data_Arr, double **, double, timeStep *, Grid *);
-void UserDefBoundary (const Data *, RBox *, int,  Grid *);
+void UserDefBoundary (const Data *, RBox *, int,  Grid *); 
 
 const char *VarName (int nv, int mode);
 void VectorPotentialDiff (double *, Data *, int, int, int, Grid *);
@@ -249,24 +248,26 @@ void print (const char *fmt, ...);
 void printLog  (const char *fmt, ...);
 void Trace (double);
 
-
 #if LINE_DRIVEN_WIND != NO
-   void read_sirocco_fluxes (Data *, Grid *);
-   void read_sirocco_heatcool (Data *, Grid *, int);
-   void VGradCalc (const Data *, Grid *);
-   void bilinear (double x11[2], double x22[2], double v11[2], double v12[2], double v21[2], double v22[2], double test[2], double ans[2], int flag);
-	 double linterp (double x, double xarray[], double yarray[], int nelem);
-   void LineForce (double *, double *, double, double, double, int, int, int);
+  void   read_sirocco_fluxes   (Data *, Grid *);
+  void   read_sirocco_heatcool (Data *, Grid *, int);
+  void   VGradCalc  (const Data *, Grid *);
+  void   bilinear   (double x11[2], double x22[2],
+                     double v11[2], double v12[2],
+                     double v21[2], double v22[2],
+                     double test[2], double ans[2], int flag);
+  double linterp    (double x, double xarray[], double yarray[], int nelem);
+  void   LineForce  (double *, double *, double, double, double, int, int, int);
 #endif
 
 /* ----------------------------------------------
-           functions in tools.c
+           functions in tools.c 
    ---------------------------------------------- */
 
 void PlutoError (int, char *);
 
 #if UPDATE_VECTOR_POTENTIAL == YES
- void VectorPotentialUpdate (const Data *d, const void *vp,
+ void VectorPotentialUpdate (const Data *d, const void *vp, 
                              const Sweep *sweep, const Grid *grid);
 #endif
 
@@ -275,3 +276,4 @@ void PlutoError (int, char *);
 void Enthalpy    (double **, double *, int, int);
 void Entropy     (double **, double *, int, int);
 void SoundSpeed2 (const State *, int, int, int, Grid *);
+

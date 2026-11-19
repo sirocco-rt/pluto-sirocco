@@ -8,7 +8,7 @@
   Time stepping include Euler, RK2 and RK3.
 
   \authors A. Mignone (andrea.mignone@unito.it)\n
-  \date    Apr 02, 2024
+  \date    Nov 18, 2024
 */
 /* ///////////////////////////////////////////////////////////////////// */
 #include "pluto.h"
@@ -254,6 +254,9 @@ int AdvanceStep (Data *d, timeStep *Dts, Grid *grid)
 
   #if (defined FARGO) && (TIME_STEPPING == RK2)
   FARGO_ShiftSolution (d->Uc, d->Vs, grid);
+  #if PARTICLES
+  FARGO_ShiftParticles (d, grid, g_dt);
+  #endif
   #endif
 
 /* -- 2f. Convert to Primitive -- */
@@ -318,6 +321,9 @@ int AdvanceStep (Data *d, timeStep *Dts, Grid *grid)
 
   #ifdef FARGO
   FARGO_ShiftSolution (d->Uc, d->Vs, grid);
+  #if PARTICLES
+  FARGO_ShiftParticles (d, grid, g_dt);
+  #endif
   #endif
   err = ConsToPrim3D (d->Uc, d->Vc, d->flag, &box, grid);
   #if FAILSAFE == YES

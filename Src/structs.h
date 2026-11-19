@@ -455,8 +455,7 @@ typedef struct Runtime_{
                                        Default is output_dir. */
   Output output[MAX_OUTPUT_TYPES];
   double patch_left_node[5][16];  /*  self-expl. */
-  double ratio[5];  /* required for the ratio grid type */
-
+  double ratio[5];               /**< Per-dimension cell-size ratio for RATIO_GRID */
   double  cfl;               /**< Hyperbolic cfl number (\c CFL) */
   double  cfl_max_var;       /**< Maximum increment between consecutive time
                                   steps (\c CFL_max_var). */
@@ -594,6 +593,21 @@ typedef struct Data_{
   uint16_t ***flag; /**< Pointer to a 3D array setting useful integration
                          flags that are retrieved during integration. */
 
+/* ---- Line Driven Wind / BLONDIN cooling data members ---- */
+
+#if LINE_DRIVEN_WIND != NO
+  #if COOLING != NO
+  double ***comp_h_pre;  /**< Compton heating prefactor             */
+  double ***comp_c_pre;  /**< Compton cooling prefactor             */
+  double ***xray_h_pre;  /**< X-ray heating prefactor               */
+  double ***line_c_pre;  /**< Line cooling prefactor                */
+  double ***brem_c_pre;  /**< Bremsstrahlung cooling prefactor      */
+  double ***xi_ion_pre;  /**< Ionisation parameter prefactor        */
+  double ***sirocco_xi;  /**< Ionisation parameter from SIROCCO     */
+  double ***sirocco_t_r; /**< Radiation temperature from SIROCCO    */
+  #endif
+#endif
+
   /* -- Particles-related quantities -- */
 
   struct particleNode_ *PHead;   /* Must use full declaration since particleNode
@@ -606,6 +620,10 @@ typedef struct Data_{
   double ***qcr;    /**< The CR charge density 3D array.  */
 
   double ****Fdust; /**< Drag force (dust particles only)   */
+  #if TIME_STEPPING == RK3
+  double ****Fdust_mid; 
+  #endif
+
   struct Particle_ **pstr;  /**< Used to convert a linked list to array (useful ?) */
   int particles_GC_InvalidCount; /**< Number of particles for which GCA conditions are not fulfilled. */
   double ****Vc0; /* Use by Particles GC module to compute temporal derivatives. */
@@ -617,32 +635,6 @@ typedef struct Data_{
   double ***Ex3; /**< cell-centered emf used in CT averaging or CR particles */
 
   struct ElectroMotiveForce *emf;
-
-   /* Heating and cooling */
-
-   #if LINE_DRIVEN_WIND != NO
-      #if COOLING != NO
-
-      double ***comp_h_pre;
-      double ***comp_c_pre;
-      double ***line_c_pre;
-      double ***xray_h_pre;
-      double ***brem_c_pre;
-      double ***xi_ion_pre;
-  //
-      double ***comp_h;
-      double ***comp_c;
-      double ***line_c;
-      double ***xray_h;
-      double ***brem_c;
-
-      double ***sirocco_xi;
-      double ***sirocco_t_r;
-
-      #endif
-    #endif
-
-
 
 /* Others */
   struct timeStep_  *Dts;

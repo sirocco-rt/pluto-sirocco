@@ -2,7 +2,7 @@
 ;
 ; NAME:      DISPLAY
 ;
-; AUTHOR:    Andrea Mignone (mignone@ph.unito.it)
+; AUTHOR:    Andrea Mignone
 ;
 ; PURPOSE:   Make a tvscl image with axis, colorbar, and all the
 ;            nice stuffs.
@@ -127,19 +127,19 @@
 ;      IDL> display, img, x1 = x1, x2 = 0.5*!PI - x2, /polar, ims = [400,400]
 ;
 ;
-;  LAST MODIFIED:   Dec 09, 2019 by A.Mignone (mignone@to.infn.it)
+;  LAST MODIFIED:   Jan 17, 2025 by A.Mignone  (andrea.mignone@unito.it)
 ;
 ;-
 PRO DISPLAY, a_in, x1 = x1, x2 = x2, $
-           xlog=xlog, ylog=ylog,uniform=uniform,$
-           title =title, label1 = label1, label2 = label2,$
-           imax = imax, imin = imin, hbar = hbar,$
-           charsize=charsize, vbar = vbar, color = color,$
-           background = background, eps  = eps,$
-           imsize=imsize,filename = filename,xsym=xsym,ysym=ysym,$
-           xrange=xrange, yrange=yrange, nwin=nwin, polar=polar,$
-           cbdiv = cbdiv, smooth=smooth, noclose=noclose,$
-           lft=lft,rgt=rgt,top=top,bot=bot
+            xlog=xlog, ylog=ylog,uniform=uniform,$
+            title =title, label1 = label1, label2 = label2,$
+            imax = imax, imin = imin, hbar = hbar,$
+            charsize=charsize, vbar = vbar, color = color,$
+            background = background, eps  = eps,$
+            imsize=imsize,filename = filename,xsym=xsym,ysym=ysym,$
+            xrange=xrange, yrange=yrange, nwin=nwin, polar=polar,$
+            cbdiv = cbdiv, smooth=smooth, noclose=noclose,$
+            lft=lft,rgt=rgt,top=top,bot=bot
 
 
  old_device = !D.NAME
@@ -300,19 +300,17 @@ PRO DISPLAY, a_in, x1 = x1, x2 = x2, $
 ;  KEYWORDS: xsym, ysym
 ; ----------------------
 
- IF (KEYWORD_SET(xsym)) THEN BEGIN
-   scrh = mirror(a,bottom=1)
+ IF (KEYWORD_SET(XSYM)) THEN BEGIN
+   scrh = MIRROR(a,/X2BEG)
    a    = scrh
-   IF (KEYWORD_SET(x2)) THEN BEGIN
-     scrh = mirror(x2,left=-1)
-     x2   = scrh
-   ENDIF
+   scrh = MIRROR(x2,X2BEG=-1)
+   x2   = scrh
    sa   = size(a)
  ENDIF
- IF (KEYWORD_SET(ysym)) THEN BEGIN
-   scrh = mirror(a,left=1)
+ IF (KEYWORD_SET(YSYM)) THEN BEGIN
+   scrh = MIRROR(a,/X1BEG)
    a    = scrh
-   scrh = mirror(x1,left=-1)
+   scrh = MIRROR(x1,X1BEG=-1)
    x1   = scrh
    sa   = size(a)
  ENDIF

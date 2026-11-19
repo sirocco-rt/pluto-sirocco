@@ -51,6 +51,7 @@ void PrimToCons (double **uprim, double **ucons, int ibeg, int iend)
     u[MX2] = v[RHO]*v[VX2];
     u[MX3] = v[RHO]*v[VX3];
 
+
     u[BX1] = v[BX1];
     u[BX2] = v[BX2];
     u[BX3] = v[BX3];
@@ -159,6 +160,7 @@ int ConsToPrim (double **ucons, double **uprim, int beg, int end, uint16_t *flag
     v[BX3] = u[BX3];
 
     kinb2 = 0.5*(m2*tau + b2);    
+
 
   /* -- Check energy positivity -- */
 

@@ -18,9 +18,9 @@
 ;  One keyword between X1BEG,... X3END should be given with values equal to
 ;
 ;   1  = reflect the image w/ respect to the axis
-;  -1 = reflect the image w/ respect to the axis and change sign
+;  -1  = reflect the image w/ respect to the axis and change sign
 ;
-; LAST MODIFIED:   Aug 13, 2024 by A. Mignone (andrea.mignone@unito.it)
+; LAST MODIFIED:   Jan 17, 2025 by A. Mignone (andrea.mignone@unito.it)
 ;
 ;-
 FUNCTION MIRROR, A, x1beg=x1beg, x2beg=x2beg, x3beg=x3beg,$
@@ -50,84 +50,108 @@ FUNCTION MIRROR, A, x1beg=x1beg, x2beg=x2beg, x3beg=x3beg,$
     ng    = x1beg/ABS(x1beg)
     x1beg = ABS(x1beg)
 
+    IF (ndim EQ 1) THEN BEGIN
+      scrh = MAKE_ARRAY(2*nx, type=type)
+      scrh[nx:*]   = A[*]
+      scrh[0:nx-1] = ng*REVERSE(A[*],1)    
+    ENDIF
+
     IF (ndim EQ 2) THEN BEGIN
       scrh = MAKE_ARRAY(2*nx, ny, type=type)
-      scrh(nx:*,*)   = A(*,*)
-      scrh(0:nx-1,*) = ng*REVERSE(A(*,*),1)    
+      scrh[nx:*,*]   = A[*,*]
+      scrh[0:nx-1,*] = ng*REVERSE(A[*,*],1)    
     ENDIF
 
     IF (ndim EQ 3) THEN BEGIN
       scrh = MAKE_ARRAY(2*nx, ny, nz, type=type)
-      scrh(nx:*,*,*)   = A(*,*,*)
-      scrh(0:nx-1,*,*) = ng*REVERSE(A(*,*,*),1)
+      scrh[nx:*,*,*]  = A[*,*,*]
+      scrh[0:nx-1,*,*] = ng*REVERSE(A[*,*,*],1)
     ENDIF
   ENDIF
 
   ; -----------------------------------
-  ; X1.end 
+  ; X1END
   ; -----------------------------------
 
   IF (KEYWORD_SET(X1END)) THEN BEGIN
     ng    = x1end/ABS(x1end)
     x1end = ABS(x1end)
 
+    IF (ndim EQ 1) THEN BEGIN
+      scrh           = MAKE_ARRAY(2*nx, type=type)
+      scrh[nx:*]   = ng*REVERSE(A[*],1)
+      scrh[0:nx-1] = A[*]
+    ENDIF
+
     IF (ndim EQ 2) THEN BEGIN
       scrh           = MAKE_ARRAY(2*nx, ny, type=type)
-      scrh(nx:*,*)   = ng*REVERSE(A(*,*),1)
-      scrh(0:nx-1,*) = A(*,*)
+      scrh[nx:*,*]   = ng*REVERSE(A[*,*],1)
+      scrh[0:nx-1,*] = A[*,*]
     ENDIF
 
     IF (ndim EQ 3) THEN BEGIN
-      scrh           = MAKE_ARRAY(2*nx, ny, nz, type=type)
-      scrh(nx:*,*,*)   = ng*REVERSE(A(*,*,*),1)
-      scrh(0:nx-1,*,*) = A(*,*,*)
+      scrh             = MAKE_ARRAY(2*nx, ny, nz, type=type)
+      scrh[nx:*,*,*]   = ng*REVERSE(A[*,*,*],1)
+      scrh[0:nx-1,*,*] = A[*,*,*]
     ENDIF
   ENDIF
 
   ; -----------------------------------
-  ; X2.beg 
+  ; X2BEG
   ; -----------------------------------
 
   IF (KEYWORD_SET(X2BEG)) THEN BEGIN
     ng    = x2beg/ABS(x2beg)
     x2beg = ABS(x2beg)
 
+    IF (ndim EQ 1) THEN BEGIN
+      scrh = MAKE_ARRAY(2*ny, type=type)
+      scrh[ny:*]   = A[*]
+      scrh[0:ny-1] = ng*REVERSE(A[*],2)    
+    ENDIF
+
     IF (ndim EQ 2) THEN BEGIN
       scrh = MAKE_ARRAY(nx, 2*ny, type=type)
-      scrh(*,ny:*)   = A(*,*)
-      scrh(*,0:ny-1) = ng*REVERSE(A(*,*),2)    
+      scrh[*,ny:*]   = A[*,*]
+      scrh[*,0:ny-1] = ng*REVERSE(A[*,*],2)    
     ENDIF
 
     IF (ndim EQ 3) THEN BEGIN
       scrh = MAKE_ARRAY(nx, 2*ny, nz, type=type)
-      scrh(*,ny:*,*)   = A(*,*,*)
-      scrh(*,0:ny-1,*) = ng*REVERSE(A(*,*,*),2)    
+      scrh[*,ny:*,*]   = A[*,*,*]
+      scrh[*,0:ny-1,*] = ng*REVERSE(A[*,*,*],2)    
     ENDIF
   ENDIF
 
   ; -----------------------------------
-  ; X2.end 
+  ; X2END
   ; -----------------------------------
 
   IF (KEYWORD_SET(X2END)) THEN BEGIN
     ng    = x2end/ABS(x2end)
     x2end = ABS(x2end)
 
+    IF (ndim EQ 1) THEN BEGIN
+      scrh           = MAKE_ARRAY(2*ny, type=type)
+      scrh[ny:*]   = ng*REVERSE(A[*],2)
+      scrh[0:ny-1] = A[*]
+    ENDIF
+
     IF (ndim EQ 2) THEN BEGIN
       scrh           = MAKE_ARRAY(nx, 2*ny, type=type)
-      scrh(*,ny:*)   = ng*REVERSE(A(*,*),2)
-      scrh(*,0:ny-1) = A(*,*)
+      scrh[*,ny:*]   = ng*REVERSE(A[*,*],2)
+      scrh[*,0:ny-1] = A[*,*]
     ENDIF
 
     IF (ndim EQ 3) THEN BEGIN
       scrh           = MAKE_ARRAY(nx, 2*ny, nz, type=type)
-      scrh(*,ny:*,*)   = ng*REVERSE(A(*,*,*),2)
-      scrh(*,0:ny-1,*) = A(*,*,*)
+      scrh[*,ny:*,*]   = ng*REVERSE(A[*,*,*],2)
+      scrh[*,0:ny-1,*] = A[*,*,*]
     ENDIF
   ENDIF
 
   ; -----------------------------------
-  ; X3.beg 
+  ; X3BEG
   ; -----------------------------------
 
   IF (KEYWORD_SET(X3BEG)) THEN BEGIN
@@ -136,13 +160,13 @@ FUNCTION MIRROR, A, x1beg=x1beg, x2beg=x2beg, x3beg=x3beg,$
 
     IF (ndim EQ 3) THEN BEGIN
       scrh = MAKE_ARRAY(nx, ny, 2*nz, type=type)
-      scrh(*,*,nz:*)   = A(*,*,*)
-      scrh(*,*,0:nz-1) = ng*REVERSE(A(*,*,*),3)    
+      scrh[*,*,nz:*]   = A[*,*,*]
+      scrh[*,*,0:nz-1] = ng*REVERSE(A[*,*,*],3)    
     ENDIF
   ENDIF
 
   ; -----------------------------------
-  ; X2.end 
+  ; X3END 
   ; -----------------------------------
 
   IF (KEYWORD_SET(X3END)) THEN BEGIN
@@ -151,8 +175,8 @@ FUNCTION MIRROR, A, x1beg=x1beg, x2beg=x2beg, x3beg=x3beg,$
 
     IF (ndim EQ 3) THEN BEGIN
       scrh             = MAKE_ARRAY(nx, ny, 2*nz, type=type)
-      scrh(*,*,nz:*)   = ng*REVERSE(A(*,*,*),3)
-      scrh(*,*,0:nz-1) = A(*,*,*)
+      scrh[*,*,nz:*]   = ng*REVERSE(A[*,*,*],3)
+      scrh[*,*,0:nz-1] = A[*,*,*]
     ENDIF
   ENDIF
 

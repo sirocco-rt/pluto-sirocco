@@ -13,6 +13,12 @@
 ################################################################
 
 import os, sys, traceback, time, string
+
+# Python 3 compatibility for the legacy text-menu entry points.
+try:
+  raw_input
+except NameError:
+  raw_input = input
 have_curses = 1
 for x in sys.argv:  # avoid curses library with the --no-curses option.
   if (x == "--no-curses"):

@@ -134,10 +134,21 @@ void HLLC_Solver (const Sweep *sweep, int beg, int end,
 
       usL[ENG] *= usL[RHO];
       usR[ENG] *= usR[RHO];
-      #elif EOS == ISOTHERMAL
+      #elif EOS == ISOTHERMAL  
       scrh = 1.0/(SR[i] - SL[i]);
+
+     /* ---------------------------------------------------
+        Following Mignone JCP (2007) we compute vs as 
+        vs = Fhll(rho)/rho and the normal component of 
+        momentum as mxn = mx(Hll).
+        (But we first need to pressure to the momentum Flux)
+        --------------------------------------------------- */
+
+      double fLn = fL[i][MXn] + pL[i];
+      double fRn = fR[i][MXn] + pR[i];
+
       rho  = (SR[i]*uR[RHO] - SL[i]*uL[RHO] - fR[i][RHO] + fL[i][RHO])*scrh;
-      mx   = (SR[i]*uR[MXn] - SL[i]*uL[MXn] - fR[i][MXn] + fL[i][MXn])*scrh;
+      mx   = (SR[i]*uR[MXn] - SL[i]*uL[MXn] - fRn + fLn)*scrh;
        
       usL[RHO] = usR[RHO] = rho;
       usL[MXn] = usR[MXn] = mx;
@@ -149,7 +160,6 @@ void HLLC_Solver (const Sweep *sweep, int beg, int end,
       usL[MXb] = rho*vL[VXb]; usR[MXb] = rho*vR[VXb];
       #endif
 
-        
  /* ---- verify consistency condition ------ */
  /*
       for (nv = 0; nv < NFLX; nv++) {

@@ -3,8 +3,8 @@
   \file
   \brief   Single stage integration for RK time stepping.
 
-  Advance the equations in conservative form by taking a single stage
-  in the form
+  Advance the equations in conservative form by taking a single stage 
+  in the form 
   \f[
      \begin{array}{l}
       U_c \quad\Longleftarrow \quad  U_c + \Delta t R_c(V) \\ \noalign{\medskip}
@@ -13,16 +13,16 @@
   \f]
   where \f$ U_c \f$ and \f$ U_s \f$ are a 3D arrays containing, respectively,
   zone-centered and staggered (conservative) variables, <em> V = d->Vc <\em>
-  is a 3D array of primitive variables, \c R(V) is the right hand side containing
+  is a 3D array of primitive variables, \c R(V) is the right hand side containing 
   flux differences and source terms.
-  Note that \c U and \c V may \e not necessarily be the map of
+  Note that \c U and \c V may \e not necessarily be the map of 
   each other, i.e., \c U is \e not \c U(V).
   The right hand side can contain contributions from all directions.
-
-  When the integrator stage is the first one (predictor), this function
-  also computes the maximum of inverse time steps for hyperbolic and
+   
+  When the integrator stage is the first one (predictor), this function 
+  also computes the maximum of inverse time steps for hyperbolic and 
   parabolic terms (if the latters are included explicitly).
-
+  
   \authors A. Mignone (andrea.mignone@unito.it)\n
            C. Zanni   (zanni@oato.inaf.it)\n
 
@@ -35,13 +35,13 @@
 void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
                  double dt, timeStep *Dts, Grid *grid)
 /*!
- *
+ * 
  * \param [in,out]  d        pointer to PLUTO Data structure
  * \param [out]     Uc       zone-centered data array containing cons. variables
  *                           at the previous time step to be updated.
- * \param [out]     Us       face-centered (staggered) variables
+ * \param [out]     Us       face-centered (staggered) variables 
  *                           at the previous time step to be updated.
- * \param [out]     aflux    interface fluxes needed for refluxing operations
+ * \param [out]     aflux    interface fluxes needed for refluxing operations 
  *                           (only with AMR)
  * \param [in]      dt       the time step for the current update step
  * \param [in,out]  Dts      pointer to time step structure
@@ -88,7 +88,7 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
    -------------------------------------------------------- */
 
   if (stateC->v == NULL){
-    MakeState (&sweep);
+    MakeState (&sweep);    
     #if DIMENSIONS > 1
     C_dt = ARRAY_3D(NX3_MAX, NX2_MAX, NX1_MAX, double);
     #endif
@@ -122,12 +122,12 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
 #endif
 
 /* --------------------------------------------------------
-   2. Update conservative solution array with hyperbolic
+   2. Update conservative solution array with hyperbolic 
       terms only.
    -------------------------------------------------------- */
 
   /* -- 2a. Compute current for Hall MHD -- */
-
+  
   #if (HALL_MHD == EXPLICIT)
   #ifdef STAGGERED_MHD
     #error HALL_MHD not compatible with CT scheme
@@ -135,13 +135,14 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
   GetCurrent (d, grid);
   #endif
 
+  /* ---- PLUTO-SIROCCO: compute velocity gradient before the sweep ---- */
   #if LINE_DRIVEN_WIND != NO
-     VGradCalc(d, grid);
+  VGradCalc(d, grid);
   #endif
 
   for (dir = beg_dir; dir <= end_dir; dir++){
 
-    g_dir = dir;
+    g_dir = dir;  
 
     #if !INCLUDE_JDIR
     if (g_dir == JDIR) continue;
@@ -156,7 +157,7 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
     #if (defined STAGGERED_MHD)
     #if    (CT_EMF_AVERAGE == UCT_HLLD) || (CT_EMF_AVERAGE == CT_FLUX) \
         || (CT_EMF_AVERAGE == UCT_HLL)  || (CT_EMF_AVERAGE == CT_MAXWELL) \
-        || (CT_EMF_AVERAGE == UCT_GFORCE)
+        || (CT_EMF_AVERAGE == UCT_GFORCE) 
     int ngh = GetNghost();
     RBoxEnlarge (&sweepBox, ngh*(g_dir != IDIR),
                             ngh*(g_dir != JDIR),
@@ -200,15 +201,15 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
       double ***Jz = d->J[KDIR];
       for ((*ip) = 0; (*ip) < ntot-1; (*ip)++) {
 
-        if (g_dir == IDIR){
+        if (g_dir == IDIR){  
           stateL->J[*ip][IDIR] = AVERAGE_XYZ(Jx,k-1,j-1,i);
           stateL->J[*ip][JDIR] = AVERAGE_Z(Jy,k-1,j,i);
           stateL->J[*ip][KDIR] = AVERAGE_Y(Jz,k,j-1,i);
-        }else if (g_dir == JDIR){
+        }else if (g_dir == JDIR){  
           stateL->J[*ip][IDIR] = AVERAGE_Z(Jx,k-1,j,i);
           stateL->J[*ip][JDIR] = AVERAGE_XYZ(Jy,k-1,j,i-1);
           stateL->J[*ip][KDIR] = AVERAGE_X(Jz,k,j,i-1);
-        }else if (g_dir == KDIR){
+        }else if (g_dir == KDIR){  
           stateL->J[*ip][IDIR] = AVERAGE_Y(Jx,k,j-1,i);
           stateL->J[*ip][JDIR] = AVERAGE_X(Jy,k,j,i-1);
           stateL->J[*ip][KDIR] = AVERAGE_XYZ(Jz,k,j-1,i-1);
@@ -221,9 +222,9 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
       #endif
 
     /* ----------------------------------------------------
-       2b. Compute L/R states
+       2b. Compute L/R states 
        ---------------------------------------------------- */
-
+      
       CheckNaN (stateC->v, 0, ntot-1, "stateC->v");
       States  (&sweep, nbeg - 1, nend + 1, grid);
 
@@ -243,7 +244,7 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
       #endif
 
       #if ((PHYSICS == RHD) || (PHYSICS == RMHD)) && RADIATION
-      d->radiationRiemannSolver (&sweep, nbeg-1, nend, Dts->cmax, grid);
+      d->radiationRiemannSolver (&sweep, nbeg-1, nend, Dts->cmax, grid); 
       #endif
       #ifdef STAGGERED_MHD
       CT_StoreUpwindEMF (&sweep, d->emf, nbeg-1, nend, grid);
@@ -265,7 +266,7 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
       #if FORCED_TURB == YES
       if (g_stepNumber%Ft->StirFreq == 0 ? 1:0){
         ForcedTurb_CorrectRHS(d, &sweep, nbeg, nend, dt,  grid);
-      }
+      }  
       #endif
 
     /* ----------------------------------------------------
@@ -274,7 +275,7 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
            U += dt*R
        ---------------------------------------------------- */
 
-      for ((*ip) = nbeg; (*ip) <= nend; (*ip)++) {
+      for ((*ip) = nbeg; (*ip) <= nend; (*ip)++) { 
         #if RADIATION_NR
         NMHD_LOOP(nv) {
         #else
@@ -292,9 +293,9 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
         #if HAVE_ENERGY && ENTROPY_SWITCH
         sweep.flux[*ip][ENTR] = 0.0;
         #endif
-      }
+      }   
       StoreAMRFlux (sweep.flux, aflux, 0, 0, NVAR-1, nbeg-1, nend, grid);
-      #endif
+      #endif 
 
     /* ----------------------------------------------------
        2f. Compute inverse hyperbolic time step
@@ -309,14 +310,14 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
         #elif (RING_AVERAGE > 1) && (GEOMETRY == SPHERICAL)
         if (g_dir == KDIR) q = 1.0/grid->ring_av_csize[g_j];
         #endif
-
+        
         for ((*ip) = nbeg; (*ip) <= nend; (*ip)++) {
           C_dt[k][j][i] += 0.5*(Dts->cmax[(*ip)-1] + Dts->cmax[*ip])*inv_dl[*ip]*q;
         }
       }
       #else
       inv_dl = GetInverse_dl(grid);
-      for ((*ip) = nbeg-1; (*ip) <= nend; (*ip)++) {
+      for ((*ip) = nbeg-1; (*ip) <= nend; (*ip)++) { 
         Dts->invDt_hyp = MAX(Dts->invDt_hyp, Dts->cmax[*ip]*inv_dl[*ip]);
       }
       #endif
@@ -332,7 +333,7 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
 #endif
 
 /* --------------------------------------------------------
-   4. Correct fluxes for shearingbox
+   4. Correct fluxes for shearingbox 
    -------------------------------------------------------- */
 
 #ifdef SHEARINGBOX
@@ -378,7 +379,13 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
   #endif
   #if (PARTICLES == PARTICLES_DUST) && (PARTICLES_DUST_FEEDBACK == YES)
   RBoxDefine(IBEG, IEND, JBEG, JEND, KBEG, KEND, CENTER, &sweepBox);
+  #if TIME_STEPPING == RK2
   Particles_Dust_ConservativeFeedback (Uc, d->Fdust, dt, &sweepBox);
+  #elif TIME_STEPPING == RK3
+  if (g_intStage == 2) Particles_Dust_ConservativeFeedback (Uc, d->Fdust, dt, &sweepBox);
+  if (g_intStage == 3) Particles_Dust_ConservativeFeedback (Uc, d->Fdust_mid, dt, &sweepBox);
+  #endif
+
   #endif
 #endif
 
@@ -403,7 +410,7 @@ void UpdateStage(Data *d, Data_Arr Uc, Data_Arr Us, double **aflux,
 
   if (g_intStage == 1 && g_stepNumber%FUNCTION_CLOCK_NSTEP == 0) {
     printf (">>>> UpdateStage [s] = %f\n",ftime);
-    ftime = 0.0;
+    ftime = 0.0; 
   }
 #endif
 

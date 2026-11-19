@@ -81,6 +81,7 @@ void PatchPluto::saveFluxes (double **aflux, Grid *grid)
    2. Compute flux*area for the X2 direction
    ------------------------------------------------------------ */
 
+#if INCLUDE_JDIR
   g_dir = JDIR;
   nxf = grid->np_int[IDIR] + (g_dir == IDIR);
   nyf = grid->np_int[JDIR] + (g_dir == JDIR);
@@ -111,7 +112,8 @@ void PatchPluto::saveFluxes (double **aflux, Grid *grid)
     aflux[JDIR][indf] *= x1[i]*sin(grid->xr[JDIR][j]);
     #endif
   }
-  
+#endif
+
 /* ------------------------------------------------------------
    3. Compute flux*area for the X3 direction
    ------------------------------------------------------------ */

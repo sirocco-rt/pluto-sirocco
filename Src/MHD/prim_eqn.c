@@ -1,25 +1,25 @@
 /* ///////////////////////////////////////////////////////////////////// */
-/*!
-  \file
+/*! 
+  \file  
   \brief Compute the right hand side of the primitive HD/MHD equations.
-
-  Implements the right hand side of the quasi-linear form of the MHD
-  equations.
+  
+  Implements the right hand side of the quasi-linear form of the MHD 
+  equations. 
   In 1D this may be written as
-  \f[
+  \f[ 
       \partial_t{\mathbf{V}} = - A\cdot\partial_x\mathbf{V} + \mathbf{S}
   \f]
   where \f$ A \f$ is the matrix of the primitive form of the equations,
   \f$ S \f$ is the source term.
 
   \b Reference
-
+ 
   - "A solution adaptive upwind scheme for ideal MHD",
     Powell et al., JCP (1999) 154, 284.
-
-  The function PrimRHS() implements the first term while PrimSource()
+ 
+  The function PrimRHS() implements the first term while PrimSource() 
   implements the source term part.
-
+ 
   \author A. Mignone (andrea.mignone@unito.it)
   \date   Aug 27, 2020
 */
@@ -29,8 +29,8 @@
 /* *********************************************************************** */
 void PrimRHS (double *v, double *dv, double cs2, double h, double *Adv)
 /*!
- * Compute the matrix-vector multiplication \f$ A(\mathbf{v})\cdot
- * d\mathbf{v} \f$ where A is the matrix of the quasi-linear form
+ * Compute the matrix-vector multiplication \f$ A(\mathbf{v})\cdot 
+ * d\mathbf{v} \f$ where A is the matrix of the quasi-linear form 
  * of the MHD equations.
  *
  *  \b References
@@ -56,7 +56,7 @@ void PrimRHS (double *v, double *dv, double cs2, double h, double *Adv)
   double tau  = 1.0/v[RHO];
 
 /* ----------------------------------------------
-         Adv[k]  Contains A[k][*]*dv[*]
+         Adv[k]  Contains A[k][*]*dv[*]  
    ----------------------------------------------  */
 
   Adv[RHO] = v[VXn]*dv[RHO] + v[RHO]*dv[VXn];
@@ -69,7 +69,7 @@ void PrimRHS (double *v, double *dv, double cs2, double h, double *Adv)
 //  Adv[VXn] = v[VXn]*dv[VXn] + (dv[PRS] + scrh)/v[RHO];
   #elif EOS == ISOTHERMAL
   Adv[VXn] = v[VXn]*dv[VXn] + tau*(cs2*dv[RHO] + scrh);
-  #else
+  #else 
   printLog ("! PrimRHS(): not defined for this EoS\n");
   QUIT_PLUTO(1);
   #endif
@@ -83,16 +83,16 @@ void PrimRHS (double *v, double *dv, double cs2, double h, double *Adv)
 
   #if DIVB_CONTROL == EIGHT_WAVES
   Adv[BXn] = v[VXn]*dv[BXn];
-  #elif DIVB_CONTROL == DIV_CLEANING
+  #elif DIVB_CONTROL == DIV_CLEANING 
   ch2 = glm_ch*glm_ch;
-  Adv[BXn]     = dv[PSI_GLM];
-  Adv[PSI_GLM] = dv[BXn]*ch2;
+  Adv[BXn]     = dv[PSI_GLM];             
+  Adv[PSI_GLM] = dv[BXn]*ch2; 
   #else
   Adv[BXn] = 0.0;
   #endif
-
+   
 /* -------------------------------------------------------- */
-/*! \note
+/*! \note 
     In the 7-wave and 8-wave formulations we use the same
     matrix being decomposed into right and left eigenvectors
     during the Characteristic Tracing step.
@@ -127,36 +127,36 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
  * These include:
  *
  *  - Geometrical sources;
- *  - Shearing-box terms
+ *  - Shearing-box terms 
  *  - Gravity;
  *  - terms related to divergence of B control (Powell eight wave and GLM);
  *  - FARGO source terms.
  *
- *  The rationale for choosing during which sweep a particular source
- *  term has to be incorporated should match the same criterion used
- *  during the conservative update.
+ *  The rationale for choosing during which sweep a particular source 
+ *  term has to be incorporated should match the same criterion used 
+ *  during the conservative update. 
  *  For instance, in polar or cylindrical coordinates, curvilinear source
  *  terms are included during the radial sweep only.
- *
+ * 
  * \param [in]  gas   pointer to a Sweep structure
  * \param [out] src   array of source terms
  * \param [in]  beg   initial index of computation
  * \param [in]  end   final   index of computation
  * \param [in]  grid  pointer to a Grid structure
  *
- * \note This function does not work in spherical coordinates yet.
- *   For future implementations we annotate hereafter the induction
+ * \note This function does not work in spherical coordinates yet. 
+ *   For future implementations we annotate hereafter the induction 
  *   equation in spherical coordinates:
  *
  *  \f[ \partial_tB_r + \frac{1}{r}\partial_\theta E_\phi
  *    - \frac{1}{r\sin\theta}\partial_\phi E_\theta = -E_\phi\cot\theta/r \f]
  *  \f[ \partial_t B_\theta + \frac{1}{r\sin\theta}\partial_\phi E_r
  *    - \partial_rE_\phi =   E_\phi/r \f]
- *  \f[ \partial_t B_\phi + \partial_r E_\theta
+ *  \f[ \partial_t B_\phi + \partial_r E_\theta 
  *    - \frac{1}{r}\partial_\theta E_r = - E_\theta/r\f]
  *
- * where
- *  \f[ E_\phi   = -(v \times B)_\phi   = - (v_r B_\theta - v_\theta B_r)
+ * where 
+ *  \f[ E_\phi   = -(v \times B)_\phi   = - (v_r B_\theta - v_\theta B_r) 
  *     \,,\qquad
  *      E_\theta = -(v \times B)_\theta = - (v_\phi B_r    - v_r B_\phi) \f]
  *********************************************************************** */
@@ -188,12 +188,12 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
   x1 = grid->xgc[IDIR]; x1p = grid->xr[IDIR]; dx1 = grid->dx[IDIR];
   x2 = grid->xgc[JDIR]; x2p = grid->xr[JDIR]; dx2 = grid->dx[JDIR];
   x3 = grid->xgc[KDIR]; x3p = grid->xr[KDIR]; dx3 = grid->dx[KDIR];
-#else
+#else  
   x1 = grid->x[IDIR]; x1p = grid->xr[IDIR]; dx1 = grid->dx[IDIR];
   x2 = grid->x[JDIR]; x2p = grid->xr[JDIR]; dx2 = grid->dx[JDIR];
   x3 = grid->x[KDIR]; x3p = grid->xr[KDIR]; dx3 = grid->dx[KDIR];
 #endif
-
+  
 #ifdef GLM_MHD
   ch2 = glm_ch*glm_ch;
 #endif
@@ -202,7 +202,7 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
   i = g_i;
   j = g_j;
   k = g_k;
-
+  
 /* -- Initialize all elements of src to zero -- */
 
   memset((void *)src[0], '\0',NMAX_POINT*NVAR*sizeof(double));
@@ -215,21 +215,21 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
 
   if (g_dir == IDIR) {
     for (i = beg; i <= end; i++){
-      v = gas->v[i];
+      v = gas->v[i]; 
 
       tau   = 1.0/v[RHO];
       dA_dV = 1.0/x1[i];
 
       src[i][RHO]   = -v[RHO]*v[VXn]*dA_dV;
       #if PHYSICS == HD
-      src[i][iVR]   =  v[iVPHI]*v[iVPHI]*dA_dV;
+      src[i][iVR]   =  v[iVPHI]*v[iVPHI]*dA_dV; 
       src[i][iVPHI] = -v[iVR]*v[iVPHI]*dA_dV;
       #elif PHYSICS == MHD
-      src[i][iVR]   = (v[iVPHI]*v[iVPHI] - v[iBPHI]*v[iBPHI]*tau)*dA_dV;
+      src[i][iVR]   = (v[iVPHI]*v[iVPHI] - v[iBPHI]*v[iBPHI]*tau)*dA_dV; 
       src[i][iVPHI] = (-v[iVR]*v[iVPHI] + v[iBR]*v[iBPHI]*tau)*dA_dV;
       src[i][iBZ]   = (v[iBR]*v[iVZ] - v[iVR]*v[iBZ])*dA_dV;
       #endif
-
+   
       #if EOS == IDEAL
       src[i][PRS] = a2[i]*src[i][RHO];
       #endif
@@ -239,11 +239,11 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
     }
   }
 
-#elif GEOMETRY == SPHERICAL
+#elif GEOMETRY == SPHERICAL 
 
   printLog ("! PrimSource: not implemented in Spherical geometry\n");
   QUIT_PLUTO(1);
-
+  
 #endif
 
 /* --------------------------------------------------------
@@ -256,36 +256,36 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
   if (g_dir == IDIR){
     for (i = beg; i <= end; i++) {
       src[i][VX1] +=  2.0*SB_OMEGA*gas->v[i][VX2];
-
+      
     /* -- Add global pressure gradient -- */
-
-      #if PARTICLES == PARTICLES_DUST
+    
+      #if PARTICLES == PARTICLES_DUST 
       src[i][VX1] += 2.0*SB_OMEGA*PARTICLES_DUST_SB_ETA_VK;
       #endif
-    }
+    } 
   } else if (g_dir == JDIR){
     for (j = beg; j <= end; j++) {
-      #ifdef FARGO
+      #ifdef FARGO 
       src[j][VX2] += (SB_Q - 2.0)*SB_OMEGA*gas->v[j][VX1];
       #else
       src[j][VX2] -= 2.0*SB_OMEGA*gas->v[j][VX1];
       #endif
-    }
+    } 
   }
   #if !INCLUDE_JDIR
   if (g_dir == KDIR){
     for (k = beg; k <= end; k++) {
-      #ifdef FARGO
+      #ifdef FARGO 
       src[k][VX2] += (SB_Q - 2.0)*SB_OMEGA*gas->v[k][VX1];
       #else
       src[k][VX2] -= 2.0*SB_OMEGA*gas->v[k][VX1];
       #endif
-    }
+    } 
   }
   #endif
-
+  
 #endif /* SHEARINGBOX */
-
+  
 #if (BODY_FORCE != NO)
   if (g_dir == IDIR) {
 
@@ -298,13 +298,11 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
     for (i = beg; i <= end; i++){
       #if BODY_FORCE & VECTOR
       v = gas->v[i];
-
       BodyForceVector(v, g, x1[i], x2[j], x3[k]);
-
       src[i][VX1] += g[IDIR];
       #endif
       #if BODY_FORCE & POTENTIAL
-      phi_p[i]     = BodyForcePotential(x1p[i], x2[j], x3[k]);
+      phi_p[i]     = BodyForcePotential(x1p[i], x2[j], x3[k]); 
       src[i][VX1] -= (phi_p[i] - phi_p[i-1])/(hscale*dx1[i]);
       #endif
 
@@ -312,7 +310,7 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
      Add tangential components in 1D. We follow
      the same conventions used in rhs_source.c
      -------------------------------------------- */
-
+    
       #if !INCLUDE_JDIR && !INCLUDE_KDIR
       src[i][VX2] += g[JDIR];
       src[i][VX3] += g[KDIR];
@@ -333,9 +331,7 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
     for (j = beg; j <= end; j++){
       #if BODY_FORCE & VECTOR
       v = gas->v[j];
-
       BodyForceVector(v, g, x1[i], x2[j], x3[k]);
-
       src[j][VX2] += g[JDIR];
       #endif
       #if BODY_FORCE & POTENTIAL
@@ -359,17 +355,15 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
     for (k = beg; k <= end; k++){
       #if BODY_FORCE & VECTOR
       v = gas->v[k];
-
       BodyForceVector(v, g, x1[i], x2[j], x3[k]);
-
       src[k][VX3] += g[KDIR];
-      #if !INCLUDE_JDIR
+      #if !INCLUDE_JDIR 
       src[k][VX2] += g[JDIR];
       #endif
       #endif
-
+      
       #if BODY_FORCE & POTENTIAL
-      phi_p[k]     = BodyForcePotential(x1[i], x2[j], x3p[k]);
+      phi_p[k]     = BodyForcePotential(x1[i], x2[j], x3p[k]); 
       src[k][VX3] -= (phi_p[k] - phi_p[k-1])/(hscale*dx3[k]);
       #endif
     }
@@ -440,7 +434,7 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
     #if GEOMETRY == CARTESIAN
     db  = 0.5*( gas->v[i+1][BXn] - gas->v[i-1][BXn])/dx[i];
     #elif GEOMETRY == CYLINDRICAL || GEOMETRY == POLAR
-    db  = 0.5*(  A[i]  *(gas->v[i+1][BXn] + gas->v[i][BXn])
+    db  = 0.5*(  A[i]  *(gas->v[i+1][BXn] + gas->v[i][BXn]) 
                - A[i-1]*(gas->v[i-1][BXn] + gas->v[i][BXn]))/dV[i];
     #endif
 
@@ -451,14 +445,14 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
     #endif
     src[i][BXt] += v[VXt]*db;
     src[i][BXb] += v[VXb]*db;
-
+     
     #if EOS == IDEAL
     scrh = v[VXn]*v[BXn] + v[VXt]*v[BXt] + v[VXb]*v[BXb];
     src[i][PRS] += (1.0 - g_gamma)*scrh*db;
     #if GLM_EXTENDED == NO
     scrh = 0.5*(gas->v[i+1][PSI_GLM] - gas->v[i-1][PSI_GLM])/dx[i];
     src[i][PRS] += (g_gamma - 1.0)*v[BXn]*scrh;
-    #endif
+    #endif        
    #endif
    }
 }
@@ -469,7 +463,7 @@ void PrimSource (const State *gas, double **src, int beg, int end, Grid *grid)
       When SHEARINGBOX is also enabled, we do not include
       these source terms since they're all provided by body_force)
    -------------------------------------------------------- */
-
+  
 #if (defined FARGO && !defined SHEARINGBOX)
   #if GEOMETRY == POLAR || GEOMETRY == SPHERICAL
   printLog ("! PrimSource(): works only in Cartesian or cylindrical coords\n");

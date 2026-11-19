@@ -133,11 +133,11 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
   }
 #endif
 
-#if GEOMETRY == POLAR
+#if (GEOMETRY == CARTESIAN) || (GEOMETRY == POLAR)
   vj[VX3] = vj[VX2];
   if (side == X3_BEG){     /* -- select the boundary side -- */
     BOX_LOOP(box,k,j,i){   /* -- Loop over boundary zones -- */
-      if (x1[i] <= 1.0){   /* -- set jet values for r <= 1 -- */
+      if (fabs(x1[i]) <= 1.0){   /* -- set jet values for r <= 1 -- */
         d->Vc[RHO][k][j][i] = vj[RHO];
         d->Vc[VX1][k][j][i] = 0.0;
         d->Vc[VX2][k][j][i] = 0.0;

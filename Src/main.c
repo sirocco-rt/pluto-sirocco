@@ -56,7 +56,7 @@ int main (int argc, char *argv[])
  *
  *********************************************************************** */
 {
-  int    nv, idim, err, restart_flag;;
+  int    nv, idim, err;
   char   first_step=1, last_step = 0;
   char   input_file[128];
   double scrh;
@@ -67,6 +67,7 @@ int main (int argc, char *argv[])
   timeStep Dts;
   cmdLine  cmd_line;
   Runtime  runtime;
+  int      restart_flag = 0; /* 0 = fresh start, 1 = restart (LINE_DRIVEN_WIND) */
 
 /* --------------------------------------------------------
    0. Initialize environment
@@ -153,58 +154,55 @@ int main (int argc, char *argv[])
     CheckForAnalysis (&data, &runtime, grd);
   }
 
+  if (cmd_line.maxsteps == 0) last_step = 1;
 
-  #if LINE_DRIVEN_WIND != NO
+/* ---------------------------------------------------------------
+   LINE_DRIVEN_WIND: read SIROCCO directional fluxes and, on first
+   call, initialise heating/cooling prefactors.                    
+   --------------------------------------------------------------- */
 
-    if (cmd_line.restart == NO) {
+#if LINE_DRIVEN_WIND != NO
 
-        restart_flag = 0;
+  if (cmd_line.restart == NO) {
 
+    restart_flag = 0;
 
-        /* we are reading the fluxes from SIROCCO */
-  		  // #if (BODY_FORCE & VECTOR)
-  		     #if (LINE_DRIVEN_WIND == SIROCCO_MODE)
-              printf ("Read fluxes from SIROCCO\n");
-  		        read_sirocco_fluxes(&data, grd);
-  		    #endif
-  		  // #endif
-
-        // we also read in heating and cooling rates from SIROCCO
-        #if (LINE_DRIVEN_WIND == SIROCCO_MODE)
-           #if COOLING != NO
-              printf ("Read heating and cooling rates from SIROCCO\n");
-              read_sirocco_heatcool (&data, grd, restart_flag);
-           #endif
-        #endif
-
-      } else {
-
-        restart_flag = 1;
-        printf ("BOOM\n");
-
-
-        // #if (BODY_FORCE & VECTOR)
-          #if (LINE_DRIVEN_WIND == SIROCCO_MODE)
-              printf ("Read fluxes from SIROCCO\n");
-              read_sirocco_fluxes(&data, grd);
-          #endif
-        // #endif
-
-        // we also read in heating and cooling rates from SIROCCO
-        #if (LINE_DRIVEN_WIND == SIROCCO_MODE)
-           #if COOLING != NO
-              printf ("Read heating and cooling rates from SIROCCO\n");
-              read_sirocco_heatcool (&data, grd, restart_flag);
-           #endif
-        #endif
-
-      }
-
+    /* read directional fluxes from SIROCCO */
+    #if (LINE_DRIVEN_WIND == SIROCCO_MODE)
+    printf ("Read fluxes from SIROCCO\n");
+    read_sirocco_fluxes (&data, grd);
     #endif
 
+    /* read heating/cooling rates from SIROCCO (first call: flag=0) */
+    #if (LINE_DRIVEN_WIND == SIROCCO_MODE)
+    #if COOLING != NO
+    printf ("Read heating and cooling rates from SIROCCO\n");
+    read_sirocco_heatcool (&data, grd, restart_flag);
+    #endif
+    #endif
 
+  } else {
 
-  if (cmd_line.maxsteps == 0) last_step = 1;
+    restart_flag = 1;
+    printf ("BOOM\n");
+
+    /* read directional fluxes from SIROCCO (restart) */
+    #if (LINE_DRIVEN_WIND == SIROCCO_MODE)
+    printf ("Read fluxes from SIROCCO\n");
+    read_sirocco_fluxes (&data, grd);
+    #endif
+
+    /* read heating/cooling rates from SIROCCO (flag=restart_flag) */
+    #if (LINE_DRIVEN_WIND == SIROCCO_MODE)
+    #if COOLING != NO
+    printf ("Read heating and cooling rates from SIROCCO\n");
+    read_sirocco_heatcool (&data, grd, restart_flag);
+    #endif
+    #endif
+
+  }
+
+#endif
   print ("> Starting computation... \n\n");
 
 /* =====================================================================
@@ -470,7 +468,7 @@ int Integrate (Data *d, timeStep *Dts, Grid *grid)
   #ifdef FARGO
   FARGO_AverageVelocity(d, grid);
   #endif
-
+  
   #if RADIATION_NR // Source step dt/2 -> Hydro step dt -> Source step dt/2
     SplitSource (d, 0.5*g_dt, Dts, grid);
     err = AdvanceStep (d, Dts, grid);

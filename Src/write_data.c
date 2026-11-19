@@ -22,6 +22,7 @@
 */
 /* ///////////////////////////////////////////////////////////////////// */
 #include "pluto.h"
+#include <errno.h>
 
 static void BOV_Header(Output *output, char *fdata);
 
@@ -426,8 +427,28 @@ BOV_Header(output, filename);
       fout = fopen (filename, "w");
     }else {
       fout = fopen (filename, "r+");
-      for (nv = 0; nv < output->nfile; nv++) fgets (sline, 512, fout);
-      fseek (fout, ftell(fout), SEEK_SET);
+      if (fout == NULL && errno == ENOENT) {
+        /* Older coupling archives may omit optional output indices.
+           Recreate the index for newly written output; do not invent history. */
+        printLog("! WriteData: missing %s; creating a new output index\n", filename);
+        fout = fopen (filename, "w");
+      } else if (fout != NULL) {
+        for (nv = 0; nv < output->nfile; nv++) {
+          if (fgets (sline, sizeof(sline), fout) == NULL) {
+            if (ferror(fout)) {
+              printLog("! WriteData: cannot read output index %s\n", filename);
+              QUIT_PLUTO(1);
+            }
+            break; /* Preserve available history and append at EOF. */
+          }
+        }
+        fseek (fout, ftell(fout), SEEK_SET);
+      }
+    }
+
+    if (fout == NULL) {
+      printLog("! WriteData: cannot open output index %s\n", filename);
+      QUIT_PLUTO(1);
     }
 
   /* -- write a multi-column file -- */

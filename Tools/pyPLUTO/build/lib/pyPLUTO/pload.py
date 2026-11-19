@@ -11,7 +11,7 @@ try:
 	hasH5 = True
 except ImportError:
 	hasH5 = False
-
+	
 class pload(object):
 	def __init__(self, ns, w_dir=None, datatype=None, level = 0, x1range=None, x2range=None, x3range=None):
 		"""
@@ -51,13 +51,13 @@ class pload(object):
 		if datatype is None:
 			datatype = "dbl"
 		self.datatype = datatype
-
+		
 		if ((not hasH5) and (datatype == 'hdf5')):
 			print('To read AMR hdf5 files with python')
 			print('Please install h5py (Python HDF5 Reader)')
 			return
 		self.level = level
-
+		
 		if w_dir is None:
 			w_dir = os.getcwd() + '/'
 		self.wdir = w_dir
@@ -68,7 +68,7 @@ class pload(object):
 			object.__setattr__(self, keys, Data_dictionary.get(keys))
 
 	def ReadTimeInfo(self, timefile):
-		"""
+		""" 
 		Read time info from the outfiles.
 		**Inputs**:
 			timefile -- name of the out file which has timing information.
@@ -88,7 +88,7 @@ class pload(object):
 			self.Dt = float(tlist[ns][2])
 
 	def ReadVarFile(self, varfile):
-		"""
+		""" 
 		Read variable names from the outfiles.
 		**Inputs**:
 			varfile -- name of the out file which has variable information.
@@ -125,7 +125,7 @@ class pload(object):
 					nmax.append(int(i.split()[0]))
 				except:
 					pass
-
+					
 			if len(i.split()) == 3:
 				try:
 					int(i.split()[0])
@@ -135,7 +135,7 @@ class pload(object):
 					if (i.split()[1] == 'GEOMETRY:'):
 						self.geometry=i.split()[2]
 					pass
-
+							
 		self.n1, self.n2, self.n3 = nmax
 		n1 = self.n1
 		n1p2 = self.n1 + self.n2
@@ -223,7 +223,7 @@ class pload(object):
 					A = array.array(dtype)
 					fmt = endian+str(n1*n2*n3)+dtype
 					nb = np.dtype(fmt).itemsize
-					A.frombytes(fp.read(nb))
+					A.fromstring(fp.read(nb))
 					if (self.Slice):
 						darr = np.zeros((n1*n2*n3))
 						indxx = np.sort([self.n3_tot*self.n2_tot*k + j*self.n2_tot + i for i in self.irange for j in self.jrange for k in self.krange])
@@ -242,7 +242,7 @@ class pload(object):
 
 		vtkvardict = dict(zip(ks,vtkvar))
 		return vtkvardict
-
+					
 	def DataScanHDF5(self, fp, myvars, ilev):
 		""" Scans the Chombo HDF5 data files for AMR in PLUTO.
 		**Inputs**:
@@ -296,7 +296,7 @@ class pload(object):
 			else:
 				rat = fl.attrs.get('ref_ratio')
 				freb[i] = rat*freb[i+1]
-
+	
 		dx0 = dx*freb[0]
 
 		## Allow to load only a portion of the domain
@@ -316,7 +316,7 @@ class pload(object):
 			kbeg0 = min(self.x3range)/dx0 ; kend0 = max(self.x3range)/dx0
 			kbeg  = max([kbeg, int(kbeg0*freb[0])]) ; kend = min([kend,int(kend0*freb[0]-1)])
 			nz = kend-kbeg+1
-
+		
 		## Create uniform grids at the required level
 		if logr == 0:
 			x1 = x1b + (ibeg+np.array(range(nx))+0.5)*dx
@@ -341,7 +341,7 @@ class pload(object):
 							('x1r',x1r),('x2r',x2r),('x3r',x3r),\
 							('dx1',dx1),('dx2',dx2),('dx3',dx3),\
 							('Dt',dt)])
-
+		
 		# Variables table
 		nvar = len(myvars)
 		vars = np.zeros((nx,ny,nz,nvar))
@@ -374,7 +374,7 @@ class pload(object):
 				kb = kb*freb[i] ; ke = (ke+1)*freb[i] - 1
 				jb = jb*freb[i] ; je = (je+1)*freb[i] - 1
 				ib = ib*freb[i] ; ie = (ie+1)*freb[i] - 1
-
+	
 				# Skip boxes lying outside ranges
 				if ((ib > iend) or (ie < ibeg) or \
 					(jb > jend) or (je < jbeg) or \
@@ -383,12 +383,12 @@ class pload(object):
 				else:
 					### Read data
 					q = data[ncount:ncount+szb].reshape((nvar,nbz,nby,nbx)).T
-
+				
 					### Find boxes intersections with current domain ranges
 					ib0 = max([ibeg,ib]) ; ie0 = min([iend,ie])
 					jb0 = max([jbeg,jb]) ; je0 = min([jend,je])
 					kb0 = max([kbeg,kb]) ; ke0 = min([kend,ke])
-
+		
 					### Store box corners in the AMRLevel structure
 					if logr == 0:
 						AMRLevel[i]['box'][j]['x0'] = x1b + dx*(ib0)
@@ -404,14 +404,14 @@ class pload(object):
 					AMRLevel[i]['box'][j]['jb'] = jb0 ; AMRLevel[i]['box'][j]['je'] = je0
 					AMRLevel[i]['box'][j]['kb'] = kb0 ; AMRLevel[i]['box'][j]['ke'] = ke0
 					AMRBoxes[ib0-ibeg:ie0-ibeg+1, jb0-jbeg:je0-jbeg+1, kb0-kbeg:ke0-kbeg+1] = il
-
+					
 					### Extract the box intersection from data stored in q
 					cib0 = (ib0-ib)//freb[i] ; cie0 = (ie0-ib)//freb[i]
 					cjb0 = (jb0-jb)//freb[i] ; cje0 = (je0-jb)//freb[i]
 					ckb0 = (kb0-kb)//freb[i] ; cke0 = (ke0-kb)//freb[i]
 					q1 = np.zeros((cie0-cib0+1, cje0-cjb0+1, cke0-ckb0+1,nvar))
 					q1 = q[cib0:cie0+1,cjb0:cje0+1,ckb0:cke0+1,:]
-
+					
 					# Remap the extracted portion
 					if (dim == 1):
 						new_shape = (ie0-ib0+1,1)
@@ -419,12 +419,12 @@ class pload(object):
 						new_shape = (ie0-ib0+1,je0-jb0+1)
 					else:
 						new_shape = (ie0-ib0+1,je0-jb0+1,ke0-kb0+1)
-
+							
 					stmp = list(new_shape)
 					while stmp.count(1) > 0:
 						stmp.remove(1)
 					new_shape = tuple(stmp)
-
+					
 					myT = Tools.Tools()
 					for iv in range(nvar):
 						vars[ib0-ibeg:ie0-ibeg+1,jb0-jbeg:je0-jbeg+1,kb0-kbeg:ke0-kbeg+1,iv] = \
@@ -441,7 +441,7 @@ class pload(object):
 		OutDict.update(h5vardict)
 		return OutDict
 
-
+	
 	def DataScan(self, fp, n1, n2, n3, endian, dtype, off=None):
 		""" Scans the data files in all formats.
 		**Inputs**:
@@ -464,8 +464,8 @@ class pload(object):
 		A = array.array(dtype)
 		fmt = endian+str(n1_tot*n2_tot*n3_tot)+dtype
 		nb = np.dtype(fmt).itemsize
-		A.frombytes(fp.read(nb))
-
+		A.fromstring(fp.read(nb))
+		
 		if (self.Slice):
 			darr = np.zeros((n1*n2*n3))
 			indxx = np.sort([n3_tot*n2_tot*k + j*n2_tot + i for i in self.irange for j in self.jrange for k in self.krange])
@@ -476,7 +476,7 @@ class pload(object):
 			darr = [darr]
 		else:
 			darr = np.frombuffer(A,dtype=np.dtype(fmt))
-
+		
 		return np.reshape(darr[0],self.nshp).transpose()
 
 	def ReadSingleFile(self, datafilename, myvars, n1, n2, n3, endian,
@@ -500,7 +500,7 @@ class pload(object):
 		else:
 			fp = open(datafilename, "rb")
 		print("Reading single data file : %s"%datafilename)
-
+		
 		if self.datatype == 'vtk':
 			vtkd = self.DataScanVTK(fp, n1, n2, n3, endian, dtype)
 			ddict.update(vtkd)

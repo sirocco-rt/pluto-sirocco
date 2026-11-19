@@ -411,7 +411,7 @@ void CT_EMF_Riemann2D(const Data *d, const EMF *emf, Grid *grid)
 
     for (i = ibeg; i <= iend; i++){
       #if BACKGROUND_FIELD == YES
-      BackgroundField (xr[i], yr[j], z[k], B0);
+      BackgroundField (xr[i], y[j], zr[k], B0);
       bR[i] += B0[KDIR];
       bL[i] += B0[KDIR];
       #endif
@@ -484,7 +484,7 @@ void CT_EMF_Riemann2D(const Data *d, const EMF *emf, Grid *grid)
 
     for (j = jbeg; j <= jend; j++){
       #if BACKGROUND_FIELD == YES
-      BackgroundField (xr[i], yr[j], z[k], B0);
+      BackgroundField (x[i], yr[j], zr[k], B0);
       bR[j] += B0[KDIR];
       bL[j] += B0[KDIR];
       #endif

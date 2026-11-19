@@ -1,9 +1,9 @@
-                        PLUTO version 4.4-patch3
+                        PLUTO version 4.4-patch4
                      -------------------------------
-                  Copyright (C) 2002-2024 Andrea Mignone 
+                  Copyright (C) 2002-2026 Andrea Mignone 
 
 PLUTO is a Godunov-type code for astrophysical fluid dynamics supporting several
-modules and algorithms. This is the v 4.4 (May 2024) version of the code
+modules and algorithms. This is the v 4.4 (Jun 2026) version of the code
 (http://plutocode.ph.unito.it).
 
 This program is free software; you can redistribute it and/or modify

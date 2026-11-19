@@ -8,7 +8,7 @@
   Time stepping include Euler, RK2 and RK3.
 
   \authors A. Mignone (andrea.mignone@unito.it)\n
-  \date    Nov 11, 2020
+  \date    Nov 18, 2024
 */
 /* ///////////////////////////////////////////////////////////////////// */
 #include "pluto.h"
@@ -234,6 +234,9 @@ for (repeat = 0; repeat <= 1; repeat++){
 
   #ifdef FARGO
   FARGO_ShiftSolution (d->Uc, d->Vs, grid);
+  #if PARTICLES
+  FARGO_ShiftParticles (d, grid, g_dt);
+  #endif
   #endif
   ConsToPrim3D (d->Uc, d->Vc, d->flag, &box);
 

@@ -91,6 +91,7 @@ void MaxSignalSpeed (const State *state, double *cmin, double *cmax,
     cf = gpr + Bmag2 + sqrt(cf*cf + 4.0*gpr*Btmag2);
     cf = sqrt(0.5*cf/v[RHO]);
 
+
     #if HALL_MHD    
     cw = state->cw[i];
   

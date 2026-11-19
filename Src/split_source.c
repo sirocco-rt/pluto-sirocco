@@ -9,12 +9,12 @@
   At present these source terms are one or more of the following:
 
   - optically thin radiative losses (cooling)
-  - Diffusion operators:
-    - resistivity
+  - Diffusion operators: 
+    - resistivity 
     - Thermal conduction
     - Viscosity
   - additional user-defined terms may also be included here.
-
+  
   It handles also the time integration of radiation fields in the
   nonrelativistic radiation module
 
@@ -26,13 +26,13 @@
 
 /* ********************************************************************* */
 void SplitSource (Data *d, double dt, timeStep *Dts, Grid *grid)
-/*!
+/*! 
  *  Take one step on operator-split source terms.
  *
- *  \param [in,out] d   pointer to PLUTO Data structure containing
- *                      the solution array updated from the most
+ *  \param [in,out] d   pointer to PLUTO Data structure containing 
+ *                      the solution array updated from the most 
  *                      recent call
- *  \param[in]      dt  the time step used to integrate the source
+ *  \param[in]      dt  the time step used to integrate the source 
  *                      terms
  *  \param[in]     Dts  pointer to the time step structure
  *  \param[in]    grid  pointer to an array of grid structures
@@ -59,9 +59,9 @@ void SplitSource (Data *d, double dt, timeStep *Dts, Grid *grid)
 /* ----------------------------------------------
     Parabolic terms using STS:
 
-    - resistivity
+    - resistivity 
     - thermal conduction
-    - viscosity
+    - viscosity 
    ---------------------------------------------- */
 
 #if (PARABOLIC_FLUX & SUPER_TIME_STEPPING)
@@ -77,3 +77,4 @@ void SplitSource (Data *d, double dt, timeStep *Dts, Grid *grid)
 #endif
 
 }
+

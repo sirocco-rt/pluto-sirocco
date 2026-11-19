@@ -166,6 +166,7 @@ void CT_AverageStaggeredFieldsOld (double ****Vs, double ****UU, RBox *box,
     UU[k][j][i][ENG] += 0.5*(b2_new - b2_old);
     #endif 
 
+
   /* ------------------------------------------------------
      1c. Replace zone-centered field with staggered average
      ------------------------------------------------------ */
@@ -406,6 +407,7 @@ void CT_AverageStaggeredFields (const Data *d, int apply_ct_en_correction,
       UU[k][j][i][ENG] += 0.5*(b2_new - b2_old);
     }
     #endif 
+
 
   /* ------------------------------------------------------
      1c. Replace zone-centered field with staggered average

@@ -36,9 +36,9 @@ class DefineProblem(object):
 
     self.ChkCompatiblity() #To Replace Old Keywords with New Ones
 
-    # defining the PLUTO entries and its default values in lists.
+    # defining the PLUTO entries and its default values in lists.  
     self.entries = ['PHYSICS', 'DIMENSIONS', 'GEOMETRY',
-                    'BODY_FORCE', 'COOLING', 'RECONSTRUCTION',
+                    'BODY_FORCE', 'COOLING', 'RECONSTRUCTION', 
                     'TIME_STEPPING','NTRACER', 'PARTICLES','USER_DEF_PARAMETERS',
                     'LINE_DRIVEN_WIND']
     self.default = ['HD', '1', 'CARTESIAN',
@@ -53,27 +53,27 @@ class DefineProblem(object):
     self.flag_dict = {'WITH-CHOMBO':False, 'FULL':False, 'WITH-FD':False,
                       'WITH-SB':False, 'WITH-FARGO':False,
                       'WITH-HO':False}
-
+    
     for arg in sys.argv:
       if arg[2:].upper() in flag_keys:
         self.flag_dict[arg[2:].upper()] = True
       elif arg[2:] == 'with-chombo:':
         self.flag_dict['WITH-CHOMBO'] = True
       else:
-        pass
+        pass 
 
 
     # Generates Full Option List.
     self.GenerateOptionsList()
-
+    
     #Updates Options, default based on FLAGS.
     if True in self.flag_dict.values():
-      self.AfterFlagLists()
+      self.AfterFlagLists() 
 
     #Read the exsisting definition.h file or Browse the menu for Setting up problem.
     self.ReadOrBrowse(Ents=self.entries, Defs=self.default, Opts=self.options,
                       MenuTitle="Setup problem")
-
+    
 
     #Process Particles  Module.
     #if (self.flag_dict['WITH-PARTICLES'] == True):
@@ -112,8 +112,8 @@ class DefineProblem(object):
       self.ReadOrBrowse(Ents = self.entries_ResRMHD, Defs = self.default_ResRMHD,
                         Opts = self.options_ResRMHD, MenuTitle = "ResRMHD Menu")
       self.eos = self.default_ResRMHD[self.entries_ResRMHD.index('EOS')]
-
-    # Process the KROME cooling module when required.
+    
+    # Process the KROME cooling module when required. 
     if self.default[self.entries.index('COOLING')] == 'KROME':
       self.ProcessKROMEModule()
       self.ReadOrBrowse(Ents = self.entries_KROME, Defs = self.default_KROME,
@@ -129,14 +129,14 @@ class DefineProblem(object):
     #self.nconst = int(self.default[self.entries.index('USER_DEF_CONSTANTS')])
     if self.nparam > 0:
       self.ProcessUserDefPara()
-
+    
     self.ProcessUserDefConst()
 
-    # Write a List def_file_list which will be written as the header file.
+    # Write a List def_file_list which will be written as the header file.    
     self.WriteDefFileList()
     pf = pfIO.PlutoFiles(self.work_dir+'/definitions.h')
     pf.List2File(self.def_file_list)
-
+    
     self.AppendInitFile()
 
 
@@ -148,7 +148,7 @@ class DefineProblem(object):
 
       for i in range(len(oldKeys_)):
         pf.ReplaceWord(oldKeys_[i], replaceKeys_[i])
-
+                
 
   def GenerateOptionsList(self):
     """Creates a default option list.
@@ -162,7 +162,7 @@ class DefineProblem(object):
     dimlist = ['1','2','3']
     geolist = ['CARTESIAN','CYLINDRICAL','POLAR','SPHERICAL']
     bfolist = ['NO','VECTOR', 'POTENTIAL', '(VECTOR+POTENTIAL)']
-    coolist = ['NO','POWER_LAW','TABULATED','SNEq','MINEq','H2_COOL', 'KROME','BLONDIN']
+    coolist = ['NO','POWER_LAW','TABULATED','SNEq','MINEq','H2_COOL','KROME','BLONDIN']
     intlist = ['FLAT','LINEAR','LimO3','WENO3','PARABOLIC','WENOZ','MP5']
     if self.flag_dict['WITH-HO']:
       tmslist = ['EULER','RK2','RK3','RK4','ARK4','IERK45']
@@ -195,18 +195,18 @@ class DefineProblem(object):
                                                             'PARABOLIC',
                                                             'WENOZ',
                                                             'MP5']
-
+    
     if self.flag_dict['WITH-CHOMBO']:
       self.options[self.entries.index('GEOMETRY')] = ['CARTESIAN','CYLINDRICAL','POLAR','SPHERICAL']
       self.options[self.entries.index('RECONSTRUCTION')] = ['FLAT','LINEAR','WENO3','PARABOLIC']
       self.options[self.entries.index('TIME_STEPPING')] = ['EULER','HANCOCK','CHARACTERISTIC_TRACING','RK2']
       self.default[self.entries.index('TIME_STEPPING')] = 'HANCOCK'
-
+    
     if self.flag_dict['WITH-FARGO']:
       self.options[self.entries.index('PHYSICS')] = ['HD', 'MHD']
       self.options[self.entries.index('DIMENSIONS')] = ['2','3']
       self.default[self.entries.index('DIMENSIONS')] = '2'
-
+        
     if self.flag_dict['WITH-FD']:
       self.options[self.entries.index('PHYSICS')] = ['HD', 'MHD']
       self.options[self.entries.index('GEOMETRY')] = ['CARTESIAN']
@@ -250,7 +250,7 @@ class DefineProblem(object):
       selection = ''
       menu.SetTitle(MenuTitle)
       selection = menu.Browse(Ents, default=Defs, options=Opts)
-
+      
   def ProcessHDModule(self):
     """
     Provides entries, options and defaults specific to Hydro Module.
@@ -268,7 +268,7 @@ class DefineProblem(object):
                        ['NO','EXPLICIT','SUPER_TIME_STEPPING','RK_LEGENDRE'],
                        ['NO','EXPLICIT','SUPER_TIME_STEPPING','RK_LEGENDRE'],
                        ['NO','YES'], ['NO','YES']]
-
+  
     if self.flag_dict['WITH-CHOMBO']: # Chombo does not support STS at the
                                       # moment. Only explicit allowed with Chombo
       i =  self.entries_HD.index('THERMAL_CONDUCTION')
@@ -313,7 +313,7 @@ class DefineProblem(object):
                         ['NO','EXPLICIT', 'SUPER_TIME_STEPPING','RK_LEGENDRE'],
                         ['NO','EXPLICIT', 'SUPER_TIME_STEPPING','RK_LEGENDRE'],
                         ['NO','YES'],['NO','YES']]
-
+    
     if self.flag_dict['WITH-CHOMBO']:
       indx_ = self.entries_MHD.index('DIVB_CONTROL')
       self.options_MHD[indx_] = ['NO','EIGHT_WAVES','DIV_CLEANING']
@@ -332,7 +332,7 @@ class DefineProblem(object):
       indx_ = self.entries_MHD.index('DIVB_CONTROL')
       self.options_MHD[indx_] = ['CONSTRAINED_TRANSPORT', 'NO']
       self.default_MHD[indx_] = 'CONSTRAINED_TRANSPORT'
-
+  
   def ProcessRMHDModule(self):
     """
     Provides entries, options and defaults specific to Relativisitc
@@ -410,15 +410,15 @@ class DefineProblem(object):
         else:
           if (x[0] == "#define"):
             self.udef_params[n] = x[1]
-          else:
+          else:          
             break;
-
+                    
     if self.auto_update == 0:
       menu.SetTitle ("User-defined Parameters")
       par_entries = ['%d'%i for i in range(self.nparam)]
       menu.Insert(par_entries,self.udef_params)
 
-
+          
   def ProcessUserDefConst(self):
     """
     Sets the Userdefined Constants.
@@ -437,7 +437,7 @@ class DefineProblem(object):
         pf.ReplaceLine('/* [Beg] user-defined constants (do not change this line) */', old_beg_scrh[0][0])
         old_end_scrh = pf.LocateString('supplementary')
         pf.InsertLine('/* [End] user-defined constants (do not change this line) */', old_end_scrh[0][0] - 1)
-
+          
       scrh_beg = pf.LocateString('[Beg]')
       k_beg   = scrh_beg[0][0]+1
       scrh_end = pf.LocateString('[End]')
@@ -446,9 +446,9 @@ class DefineProblem(object):
       #print const_lines
       for n in range(len(const_lines)):
         x = const_lines[n].split()
-        try:
+        try:                
           x[0] == '#define'
-        except IndexError:
+        except IndexError: 
           pass
         else:
           if (x[0] == '#define'):
@@ -456,12 +456,12 @@ class DefineProblem(object):
             self.udef_const_vals.append(x[2])
           else:
             continue
-
+          
 
   def NonUserFriendlyConst(self):
     """
         Sets the non-user friendly constants. : OBSOLETE
-
+        
         This function only stores the Non-User Friendly constants
         whose values are different than their DEFAULT values and
         incorporates them in User Defined Constants.
@@ -471,17 +471,17 @@ class DefineProblem(object):
                 'INTERNAL_BOUNDARY', 'SHOCK_FLATTENING']
     tmplist2     = ['NO','YES','NO','NO']
     tmplist2_def = ['NO','YES','NO','NO']
-
-
+    
+    
 #       if self.flag_dict['WITH-CHOMBO']:
 #           tmplist1 += ['CHOMBO_REF_VAR','CHOMBO_LOGR']
-#           tmplist2 += ['ENG',       'NO']
+#           tmplist2 += ['ENG',       'NO']  
 
     if not self.flag_dict['WITH-FD']:
       tmplist1 = tmplist1 + ['CHAR_LIMITING', 'LIMITER']
       tmplist2 = tmplist2 + ['NO', 'DEFAULT']
       tmplist2_def = tmplist2_def + ['NO', 'DEFAULT']
-
+        
     if 'DIVB_CONTROL' in self.mod_entries:
       divb_mode = self.mod_default[self.mod_entries.index('DIVB_CONTROL')]
       if divb_mode == 'CONSTRAINED_TRANSPORT':
@@ -492,7 +492,7 @@ class DefineProblem(object):
         tmplist1 = tmplist1 + ['ASSIGN_VECTOR_POTENTIAL']
         tmplist2 = tmplist2 + ['NO']
         tmplist2_def = tmplist2_def + ['NO']
-
+      
       if not self.flag_dict['WITH-CHOMBO']:
         tmplist1 = tmplist1 + ['UPDATE_VECTOR_POTENTIAL']
         tmplist2 = tmplist2 + ['NO']
@@ -505,9 +505,9 @@ class DefineProblem(object):
 #           else:
 #                tmplist1 = tmplist1 + ['PRIMITIVE_HANCOCK']
 #                tmplist2 = tmplist2 + ['YES']
-
+    
     longword = max(len(w) for w in tmplist1)
-
+    
     if (os.path.exists(self.work_dir+'/definitions.h')):
       pf = pfIO.PlutoFiles(self.work_dir+'/definitions.h')
       scrh = pf.LocateString('supplementary')
@@ -517,7 +517,7 @@ class DefineProblem(object):
         pass
       else:
         pf.UpdateListFromFile(tmplist1, tmplist2)
-
+    
     for i in range(len(tmplist1)):
       if tmplist2[i] != tmplist2_def[i]:
         self.non_usfr = self.non_usfr + ['#define  '+tmplist1[i].ljust(28)+'   '+tmplist2[i]+'\n']
@@ -525,7 +525,7 @@ class DefineProblem(object):
   def AppendAdditionalFiles(self):
     """
     Adds additional object files based on
-    modular defintions and requirements.
+    modular defintions and requirements. 
     """
     interp_mode = self.default[self.entries.index('RECONSTRUCTION')]
 
@@ -541,7 +541,7 @@ class DefineProblem(object):
       self.additional_files.append(interp_mode.lower()+'_states.o')
     else:
       pass
-
+    
     if self.flag_dict['WITH-FD']:
       self.additional_files += ['fd_states.o', 'fd_flux.o']
 
@@ -564,23 +564,23 @@ class DefineProblem(object):
       if len(cmset) != 0:
         self.additional_files.append('ctu_step.o')
       elif self.default[self.entries.index('TIME_STEPPING')] == 'SSP_RK4':
-        self.additional_files.append('unsplit.ssprk.o')
+        self.additional_files.append('unsplit.ssprk.o')                
       else:
         self.additional_files.append('rk_step.o')
         self.additional_files.append('update_stage.o')
-
+    
     if 'HANCOCK' in self.default:
       self.additional_files.append('hancock.o')
 
     if 'CHARACTERISTIC_TRACING' in self.default:
       self.additional_files.append('char_tracing.o')
 
-    # -- Diffusion time stepping --
+    # -- Diffusion time stepping -- 
     parabolic_update = 0
     if 'SUPER_TIME_STEPPING' in self.mod_default:
       parabolic_update = 1
       self.additional_files += ['sts.o']
-
+      
     if 'RK_LEGENDRE' in self.mod_default:
       parabolic_update = 1
       self.additional_files += ['rkl.o']
@@ -591,14 +591,14 @@ class DefineProblem(object):
     if (parabolic_update):
       self.additional_files.append('parabolic_update.o')
 
-
+      
   def AppendPlutoPathAndFlags(self):
     """
     Adds additional C flags and path to 'makefile' based on
-    module defintions and requirements.
+    module defintions and requirements. 
     """
     self.pluto_path.append(self.phymodule+'/')
-
+    
     # Add path for diffusion modules
     dis_eff = ['Dust_Fluid','Thermal_Conduction', 'Viscosity']
     for de in dis_eff:
@@ -608,10 +608,10 @@ class DefineProblem(object):
 
 
     if (     ('INCLUDE_LES' in self.mod_entries) \
-         and (self.mod_default[self.mod_entries.index('INCLUDE_LES')] != 'NO') ):
+         and (self.mod_default[self.mod_entries.index('INCLUDE_LES')] != 'NO') ): 
       self.pluto_path.append("LES/")
 
-
+    
     if    self.phymodule == 'MHD' \
        or self.phymodule == 'RMHD' \
        or self.phymodule == "ResRMHD":
@@ -643,19 +643,19 @@ class DefineProblem(object):
         # Hot fix to reverse path list for debugging purposes.
         # This will have to be removed at some point later on...
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        self.pluto_path=list(reversed(self.pluto_path))
+        self.pluto_path=list(reversed(self.pluto_path)) 
 
         if ('rk_step.o' in self.additional_files):
           self.additional_files.remove('rk_step.o')
           self.additional_files.append('rk_step_imex.o')
-
+        
 
     # -- Add path for Radiation --
     if self.phymodule != "ResRMHD":
       radiation = self.mod_default[self.mod_entries.index('RADIATION')]
-      if (radiation == "YES"):
+      if (radiation == "YES"): 
         self.pluto_path.append('Radiation/')
-
+      
     # -- Add path for FARGO --
 
     if self.flag_dict['WITH-FARGO']:
@@ -678,7 +678,7 @@ class DefineProblem(object):
     if self.flag_dict['WITH-SB']:
       self.pluto_path.append('MHD/ShearingBox/')
       self.additional_flags.append(' -DSHEARINGBOX')
-
+    
     # -- Add path for Body Force --
 
     bd_force = self.default[self.entries.index('BODY_FORCE')]
@@ -686,7 +686,7 @@ class DefineProblem(object):
     # -- Add path for Cooling --
     cool_mode = self.default[self.entries.index('COOLING')]
     if cool_mode != 'NO':
-      if (cool_mode != "POWER_LAW" and cool_mode != "BLONDIN" ):
+      if (cool_mode != 'POWER_LAW' and cool_mode != 'BLONDIN'):
          self.pluto_path.append('Cooling/')
 
       if cool_mode == 'TABULATED':
@@ -713,7 +713,7 @@ class DefineProblem(object):
     # -- Add path for Particles --
     particles = self.default[self.entries.index('PARTICLES')]
     if (   particles == "PARTICLES_LP" or particles == "PARTICLES_CR"
-        or particles == "PARTICLES_DUST"):
+        or particles == "PARTICLES_DUST"): 
       self.pluto_path.append('Particles/')
 
 
@@ -730,13 +730,13 @@ class DefineProblem(object):
       sys.exit()
     else:
       pass
-
+    
     ipos = scrh[0][0] + 2
     tmplist1 = pf.ReadLines(ipos,ipos+512)
     paradict = {}
     cmms = []
     for x in tmplist1:
-      if (len(x.split()) == 0): continue  # skip blank lines
+      if (len(x.split()) == 0): continue  # skip blank lines 
       paradict.update({x.split()[0]:x.split()[1]})
       try:
         cmmval = x.split()[2]
@@ -761,7 +761,7 @@ class DefineProblem(object):
           pf.InsertLine(x.ljust(28) + '0.0'+'  '+cmms[self.udef_params.index(x)]+ '\n', ipos)
       ipos = ipos + 1
     pf.DeleteLines(ipos,ipos+100)
-
+  
 
   def WriteKromeOpts(self):
     self.kromeoptstr = 'python '+self.krome_dir+'krome -interfaceC -n='+self.krome_dir+'networks/'+ self.default_KROME[self.entries_KROME.index('NETWORK_FILE')]
@@ -779,7 +779,7 @@ class DefineProblem(object):
     if self.default_KROME[self.entries_KROME.index('GAMMA_TYPE')] != 'DEFAULT':
       self.kromeoptstr += ' -gamma='+ self.default_KROME[self.entries_KROME.index('GAMMA_TYPE')]
 
-    #remove all checks :
+    #remove all checks : 
     self.kromeoptstr += ' -noCheck -noSinkCheck'
 
   def WriteDefFileList(self):
@@ -792,12 +792,12 @@ class DefineProblem(object):
 
     self.def_file_list.append('\n/* -- physics dependent declarations -- */\n\n')
     self.phymodule = self.default[self.entries.index('PHYSICS')]
-
+    
     tmp1 = ['entries_%s'%self.phymodule, 'default_%s'%self.phymodule]
 
     # print self.phymodule
-    # sys.exit(0)
-
+    # sys.exit(0)       
+ 
     self.mod_entries = self.__getattribute__(tmp1[0])
     self.mod_default = self.__getattribute__(tmp1[1])
 
@@ -825,20 +825,20 @@ class DefineProblem(object):
 
     self.UpdatePlutoIni()
 
-
+            
     self.def_file_list.append('\n/* [Beg] user-defined constants (do not change this line) */\n\n')
     self.NonUserFriendlyConst()
     if len(self.non_usfr) > 0:
       for x in self.non_usfr:
         self.def_file_list.append(x)
-
+    
     for i in range(len(self.udef_const)):
       self.def_file_list.append('#define  '+self.udef_const[i].ljust(28)+'   '+self.udef_const_vals[i]+'\n')
 
     self.def_file_list.append('\n/* [End] user-defined constants (do not change this line) */\n')
-
+    
     #self.def_file_list.append('\n/* -- supplementary constants (user editable) -- */ \n\n')
-
+    
 
 
   def AppendInitFile(self):
@@ -851,7 +851,7 @@ class DefineProblem(object):
 
     #Check if the init.c file exists in the work directory
     inifl_exits = os.path.exists(self.ini_fname)
-
+    
     #If it does read the file and convert it contents into a list
     # Then break the list into part above the Init Function and part below the Init Function.
     if inifl_exits:
@@ -859,7 +859,7 @@ class DefineProblem(object):
       nlist = pf.File2List()
       scrh1 = pf.LocateString('void Init (double *v, double x1, double x2, double x3)\n')
       scrh3 = pf.LocateString('void InitDomain (Data *d, Grid *grid)\n')
-
+      
       if len(scrh1) == 0:
         for item in nlist:
           line = item.split()
@@ -868,12 +868,12 @@ class DefineProblem(object):
             break
       else:
         lindx1 = scrh1[0][0]
-
+          
       # If the InitDomain function is not present in the init.c file then
       # read line by line from the Init Function till you get number
       # of open curly brackets equal to close curly brackets.
 
-      if len(scrh3) == 0:
+      if len(scrh3) == 0: 
         l1 = nlist[0:lindx1]
         l2 = nlist[lindx1:]
         opBracket = 0
@@ -891,6 +891,8 @@ class DefineProblem(object):
                addline = addIndx
                break
         # Finally create a new list by adding the content of init_domain.c file
-        NewInit = l1 + l2[:addline] + inidomain + l2[addline:]
-        # Create the new init.c file.
-        pf.List2File(NewInit)
+        NewInit = l1 + l2[:addline] + inidomain + l2[addline:] 
+        # Create the new init.c file. 
+        pf.List2File(NewInit) 
+    
+    

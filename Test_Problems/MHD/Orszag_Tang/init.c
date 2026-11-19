@@ -42,7 +42,6 @@
   #define ROTATE -1
 #endif
 
-void Permute (double *v);
 /* ********************************************************************* */
 void Init (double *us, double x1, double x2, double x3)
 /*
@@ -147,22 +146,6 @@ void Init (double *us, double x1, double x2, double x3)
   #endif
 }
 
-void Permute (double *vec)
-{
-  int n, np;
-  double vs[3];
-
-  for (n = 0; n < 3; n++) vs[n] = vec[n];
-
-  for (n = 0; n < 3; n++) {
-    np = n+1;
-    if (np == 3) np = 0;
-    vec[n] = vs[np];
-  }
- 
-
-
-}
 /* ********************************************************************* */
 void InitDomain (Data *d, Grid *grid)
 /*! 

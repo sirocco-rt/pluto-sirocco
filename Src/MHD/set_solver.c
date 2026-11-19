@@ -19,6 +19,7 @@ Riemann_Solver *SetSolver (const char *solver)
  *********************************************************************** */
 {
 
+
   #ifdef FINITE_DIFFERENCE
    return (&FD_Flux);
   #endif

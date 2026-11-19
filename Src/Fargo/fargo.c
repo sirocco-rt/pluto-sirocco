@@ -297,7 +297,7 @@ void FARGO_ShiftSolution(Data_Arr U, Data_Arr Us, Grid *grid)
   /* --------------------------------------------
      5b. Start main loop on variables 
      -------------------------------------------- */
-   
+
     for (nv = NVAR; nv--;   ){
 
       #ifdef STAGGERED_MHD

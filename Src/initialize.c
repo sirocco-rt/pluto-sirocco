@@ -1,13 +1,13 @@
 /* ///////////////////////////////////////////////////////////////////// */
-/*!
-  \file
+/*! 
+  \file  
   \brief Initialize PLUTO.
 
-  Initialize() performs a number of initialization tasks before
+  Initialize() performs a number of initialization tasks before 
   starting the main computation loop.\n
   More precisely, it completes the following sequence of steps:
 
-  - parse command line options
+  - parse command line options 
   - runtime initialization (i.e. pluto.ini)
   - parallel domain decomposition
   - grid generation
@@ -15,11 +15,11 @@
   - initial conditions
   - set output attributes
 
-  The function GetDecompMode() sets the parallel domain decomposition
+  The function GetDecompMode() sets the parallel domain decomposition 
   mode which can be equal to
-
+  
   - AL_AUTO_DECOMP   default;
-  - AL_USER_DECOMP   if the -dec n1 [n2] [n3] command line
+  - AL_USER_DECOMP   if the -dec n1 [n2] [n3] command line 
                      argument has been given;
                      In this case only, procs[] contains the number
                      of processors in the three directions;
@@ -43,8 +43,8 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
  * Initialize computational grid, domain decomposition and memory
  * allocation. Also, set initial conditions and output attributes.
  *
- * \param [in]     argc       the number of command-line argument passed to
- *                            the code
+ * \param [in]     argc       the number of command-line argument passed to 
+ *                            the code 
  * \param [in]     argv       the argument value as a 1D array of char
  * \param [in,out] data       a pointer to the main PLUTO data structure
  * \param [in,out] runtime    a pointer to the Runtime structure
@@ -92,7 +92,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
   nghost = GetNghost();
   MPI_Allreduce (&nghost, &idim, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
   nghost = idim;
-
+   
   for (idim = 0; idim < DIMENSIONS; idim++){
     gsize[idim]   = runtime->npoint[idim];
     ghosts[idim]  = nghost;
@@ -114,7 +114,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
 
 /* ---- double distributed array descriptor ---- */
 
-/* SetDistributedArray (SZ, type, gsize, periods, stagdim);
+/* SetDistributedArray (SZ, type, gsize, periods, stagdim); 
   return args: beg, end, lsize, lbeg, lend, gbeg, gend, is_gbeg, is_gend
 */
 
@@ -188,7 +188,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
 
   MPI_Type_contiguous (3, MPI_FLOAT, &Float_Vect_type);
   MPI_Type_commit (&Float_Vect_type);
-
+ 
   AL_Sz_init (MPI_COMM_WORLD, &SZ_Float_Vect);
   AL_Set_type (MPI_FLOAT, 3, SZ_Float_Vect);
   AL_Set_dimensions (DIMENSIONS, SZ_Float_Vect);
@@ -215,7 +215,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
 /* ---- x-staggered array descriptor (double) ---- */
 
     #if INCLUDE_IDIR
-    stagdim[IDIR] = AL_TRUE;
+    stagdim[IDIR] = AL_TRUE; 
     stagdim[JDIR] = AL_FALSE;
     stagdim[KDIR] = AL_FALSE;
 
@@ -251,7 +251,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
 
     #if INCLUDE_JDIR
     stagdim[IDIR] = AL_FALSE;
-    stagdim[JDIR] = AL_TRUE;
+    stagdim[JDIR] = AL_TRUE; 
     stagdim[KDIR] = AL_FALSE;
 
     for (idim = 0; idim < DIMENSIONS; idim++) {
@@ -340,7 +340,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
    3. Grid Generation
    ---------------------------------------------- */
 
-  Where (-1, grid);     /* -- store grid inside the "Where"
+  Where (-1, grid);     /* -- store grid inside the "Where" 
                               function for subsequent calls -- */
   if (cmd_line->makegrid == YES) {
     print ("\n> Done < \n");
@@ -360,7 +360,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
   for (nv = 0; nv < USER_DEF_PARAMETERS; nv++) {
     g_inputParam[nv] = runtime->aux[nv];
   }
-
+  
   IBEG = grid->lbeg[IDIR]; IEND = grid->lend[IDIR];
   JBEG = grid->lbeg[JDIR]; JEND = grid->lend[JDIR];
   KBEG = grid->lbeg[KDIR]; KEND = grid->lend[KDIR];
@@ -369,7 +369,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
   NX2 = grid->np_int[JDIR];
   NX3 = grid->np_int[KDIR];
 
-  NX1_TOT = grid->np_tot[IDIR];
+  NX1_TOT = grid->np_tot[IDIR]; 
   NX2_TOT = grid->np_tot[JDIR];
   NX3_TOT = grid->np_tot[KDIR];
 
@@ -392,10 +392,10 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
 
     scrh = Length_2(i, j, k, grid);
     dxmin[JDIR] = MIN (dxmin[JDIR], scrh);
-
-    scrh = Length_3(i, j, k, grid);
+ 
+    scrh = Length_3(i, j, k, grid); 
     dxmin[KDIR] = MIN (dxmin[KDIR], scrh);
-
+     
   }}}
 
 #ifdef PARALLEL
@@ -413,11 +413,11 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
    6a. Define geometrical coefficients for
        linear / PPM reconstruction.
    ---------------------------------------------- */
-
+   
   PLM_CoefficientsSet (grid);   /* -- these may be needed by
                                       shock flattening algorithms */
 #if RECONSTRUCTION == PARABOLIC
-  PPM_CoefficientsSet (grid);
+  PPM_CoefficientsSet (grid);  
 #endif
 
 /* ----------------------------------------------
@@ -472,7 +472,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
     data->Vps[BX2s] = ARRAY_BOX( 0, NX3_TOT-1,-1, NX2_TOT-1, 0, NX1_TOT-1, double); ,
     data->Vps[BX3s] = ARRAY_BOX(-1, NX3_TOT-1, 0, NX2_TOT-1, 0, NX1_TOT-1, double);
   )
-
+    
   #if (PHYSICS == ResRMHD) && (DIVE_CONTROL == CONSTRAINED_TRANSPORT)
   DIM_EXPAND(
     data->Vps[EX1s] = ARRAY_BOX( 0, NX3_TOT-1, 0, NX2_TOT-1,-1, NX1_TOT-1, double); ,
@@ -486,12 +486,22 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
   CT_Allocate (data->emf);
 #endif /* STAGGERED_MHD */
 
-
+  
 
 #if PHYSICS == MHD || PHYSICS == RMHD || PHYSICS == ResRMHD
   data->Ex1 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
   data->Ex2 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
   data->Ex3 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
+#endif
+
+/* ----------------------------------------------
+   7a. Allocate memory for vector potential.
+   ---------------------------------------------- */
+
+#if (UPDATE_VECTOR_POTENTIAL == YES) || (ASSIGN_VECTOR_POTENTIAL == YES)
+  data->Ax3 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);   
+  data->Ax1 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);  
+  data->Ax2 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);  
 #endif
 
 /* ---- Line Driven Wind ---- */
@@ -503,34 +513,16 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
   x22_interp = ARRAY_4D(2, NX3_TOT, NX2_TOT, NX1_TOT, double);
 
   #if COOLING != NO
-      data->comp_h_pre = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->comp_c_pre = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->xray_h_pre = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->line_c_pre = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->brem_c_pre = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->xi_ion_pre = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-//
-      data->comp_h = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->comp_c = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->xray_h = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->line_c = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->brem_c = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-//
-      data->sirocco_xi  = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-      data->sirocco_t_r = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-
+  data->comp_h_pre  = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
+  data->comp_c_pre  = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
+  data->xray_h_pre  = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
+  data->line_c_pre  = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
+  data->brem_c_pre  = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
+  data->xi_ion_pre  = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
+  data->sirocco_xi  = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
+  data->sirocco_t_r = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
   #endif
-#endif
 
-
-/* ----------------------------------------------
-   7a. Allocate memory for vector potential.
-   ---------------------------------------------- */
-
-#if (UPDATE_VECTOR_POTENTIAL == YES) || (ASSIGN_VECTOR_POTENTIAL == YES)
-  data->Ax3 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-  data->Ax1 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
-  data->Ax2 = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
 #endif
 
 #if RESISTIVITY || HALL_MHD || (PHYSICS == ResRMHD)
@@ -554,10 +546,13 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
   data->qcr = ARRAY_3D(NX3_TOT, NX2_TOT, NX1_TOT, double);
   #if PARTICLES_CR_GC == YES
   data->Vc0 = ARRAY_4D(NVAR, NX3_TOT, NX2_TOT, NX1_TOT, double);
-  #endif
+  #endif 
   #endif /* PARTICLES == PARTICLES_CR */
   #if PARTICLES == PARTICLES_DUST
   data->Fdust = ARRAY_4D(3, NX3_TOT, NX2_TOT, NX1_TOT, double);
+  #if TIME_STEPPING == RK3
+  data->Fdust_mid = ARRAY_4D(3, NX3_TOT, NX2_TOT, NX1_TOT, double);
+  #endif
   #endif
 #endif
 
@@ -574,9 +569,9 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
   #endif
 
 /* ----------------------------------------------
-   8. Initialize tables needed for EOS
+   8. Initialize tables needed for EOS 
    ---------------------------------------------- */
-
+  
 #if EOS == PVTE_LAW && NIONS == 0
   #if TV_ENERGY_TABLE == YES
   MakeInternalEnergyTable();
@@ -595,7 +590,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
   Startup (data, grid);
 
 #if (PARTICLES != NO)
-  if (cmd_line->prestart == NO) Particles_Set(data, grid);
+  if (cmd_line->prestart == NO) Particles_Set(data, grid); 
 #endif
 
 /* ----------------------------------------------
@@ -613,7 +608,7 @@ void Initialize(Data *data, Runtime *runtime, Grid *grid, cmdLine *cmd_line)
    11. Print normalization units
    ---------------------------------------------- */
 
-  ShowUnits();
+  ShowUnits();  
 
   print ("> Number of processors: %d\n",nprocs);
   DIM_EXPAND(
@@ -653,15 +648,15 @@ int GetDecompMode (cmdLine *cmd_line, int procs[])
  *                        the -dec command line option has been given
  *
  *  \return  The decomposition mode:
- *
+ *  
  *   - AL_AUTO_DECOMP   defaults
- *   - AL_USER_DECOMP   if the -dec n1 [n2] [n3] command line
+ *   - AL_USER_DECOMP   if the -dec n1 [n2] [n3] command line 
  *                      argument has been given;
  *                      In this case only, procs[] contains the number
  *                      of processors in the three directions;
  *   -  AL_MPI_DECOMP   if [todo]
  * \todo AL_MPI_DECOMP mode
- *********************************************************************** */
+ *********************************************************************** */ 
 {
   int  nprocs;
   long int npx = 1, npy = 1, npz = 1;
@@ -688,9 +683,9 @@ int GetDecompMode (cmdLine *cmd_line, int procs[])
     procs[IDIR] = npx;
     procs[JDIR] = npy;
     procs[KDIR] = npz;
-
+    
   /* -- check if decomposition is correct -- */
-
+  
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     if (procs[IDIR]*procs[JDIR]*procs[KDIR] != nprocs){
       printf ("! The specified parallel decomposition (%d, %d, %d) is not\n",

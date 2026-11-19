@@ -1,8 +1,15 @@
 var searchData=
 [
-  ['res_5feta_2ec_0',['res_eta.c',['../_m_h_d_2_resistive___m_h_d_2_current___sheet_2res__eta_8c.html',1,'(Global Namespace)'],['../_m_h_d_2_resistive___m_h_d_2_field___diffusion_2res__eta_8c.html',1,'(Global Namespace)'],['../_m_h_d_2_resistive___m_h_d_2_linear___force___free_2res__eta_8c.html',1,'(Global Namespace)'],['../_m_h_d_2_resistive___m_h_d_2_linear___force___free_2tmp_2res__eta_8c.html',1,'(Global Namespace)'],['../_res_r_m_h_d_2_blast_2res__eta_8c.html',1,'(Global Namespace)'],['../_res_r_m_h_d_2_rotated___sod_2res__eta_8c.html',1,'(Global Namespace)'],['../_res_r_m_h_d_2_rotor_2res__eta_8c.html',1,'(Global Namespace)']]],
-  ['rhs_2ec_1',['rhs.c',['../rhs_8c.html',1,'']]],
-  ['rhs_5fsource_2ec_2',['rhs_source.c',['../rhs__source_8c.html',1,'']]],
-  ['rk_5fstep_2ec_3',['rk_step.c',['../_particles_2_c_r_2_g_c_2_alfven_2rk__step_8c.html',1,'(Global Namespace)'],['../_r_m_h_d_2_blast_2_c___f_i_l_e_s_2rk__step_8c.html',1,'(Global Namespace)'],['../_r_m_h_d_2_blast_2_symmetry___check_2rk__step_8c.html',1,'(Global Namespace)'],['../_r_m_h_d_2_rotor_2tmp_2_debug___files_2rk__step_8c.html',1,'(Global Namespace)']]],
-  ['rk_5fstep_5fur_2dform_2ec_4',['rk_step_UR-form.c',['../rk__step___u_r-form_8c.html',1,'']]]
+  ['particles_5fcr_5fgc_2ec_0',['particles_cr_gc.c',['../particles__cr__gc_8c.html',1,'']]],
+  ['particles_5fcr_5fgc_5fconvert_2ec_1',['particles_cr_gc_convert.c',['../particles__cr__gc__convert_8c.html',1,'']]],
+  ['particles_5fcr_5fgc_5fcorrector_2ec_2',['particles_cr_gc_corrector.c',['../particles__cr__gc__corrector_8c.html',1,'']]],
+  ['particles_5fcr_5fgc_5fpredictor_2ec_3',['particles_cr_gc_predictor.c',['../particles__cr__gc__predictor_8c.html',1,'']]],
+  ['particles_5fcr_5fgc_5fupdate_2ec_4',['particles_cr_gc_update.c',['../_g_c_2_alfven_2particles__cr__gc__update_8c.html',1,'(Global Namespace)'],['../_xpoint_2_g_c__v00__working_2particles__cr__gc__update_8c.html',1,'(Global Namespace)']]],
+  ['particles_5fdust_5fupdate_5fcart_2ec_5',['particles_dust_update_cart.c',['../particles__dust__update__cart_8c.html',1,'']]],
+  ['particles_5finit_2ec_6',['particles_init.c',['../_c_r_2_bell___instability_2_astronum___proceeding___test_2particles__init_8c.html',1,'(Global Namespace)'],['../_c_r_2_bell___instability_2particles__init_8c.html',1,'(Global Namespace)'],['../_c_r_2_g_c_2_alfven_2particles__init_8c.html',1,'(Global Namespace)'],['../_c_r_2_g_c_2_standard___tests_2_check___mu_2particles__init_8c.html',1,'(Global Namespace)'],['../_c_r_2_g_c_2_standard___tests_2particles__init_8c.html',1,'(Global Namespace)'],['../_c_r_2_gyration_2particles__init_8c.html',1,'(Global Namespace)'],['../_c_r_2_relative___drift_2particles__init_8c.html',1,'(Global Namespace)'],['../_c_r_2_xpoint_2particles__init_8c.html',1,'(Global Namespace)'],['../_dust_2_epicyclic_2particles__init_8c.html',1,'(Global Namespace)'],['../_dust_2_orbital___test_2particles__init_8c.html',1,'(Global Namespace)'],['../_dust_2_r_v___drift_2_application_2particles__init_8c.html',1,'(Global Namespace)'],['../_dust_2_r_v___drift_2particles__init_8c.html',1,'(Global Namespace)'],['../_dust_2_r_v___drift_2_wtest_2particles__init_8c.html',1,'(Global Namespace)'],['../_dust_2_streaming___instability_2_shearing_box_2particles__init_8c.html',1,'(Global Namespace)'],['../_l_p_2_planar___shock_2particles__init_8c.html',1,'(Global Namespace)']]],
+  ['particles_5fweights_2ec_7',['particles_weights.c',['../particles__weights_8c.html',1,'']]],
+  ['plm_5fstates_2ec_8',['plm_states.c',['../_eviden___setup_2plm__states_8c.html',1,'(Global Namespace)'],['../plm__states_8c.html',1,'(Global Namespace)']]],
+  ['point_5fvalue_2ec_9',['point_value.c',['../point__value_8c.html',1,'']]],
+  ['ppm_5fcoeffs_2ec_10',['ppm_coeffs.c',['../ppm__coeffs_8c.html',1,'']]],
+  ['ppm_5fstates_2ec_11',['ppm_states.c',['../ppm__states_8c.html',1,'']]]
 ];

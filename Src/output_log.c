@@ -163,10 +163,17 @@ void OutputLogPost(Data *data, timeStep *Dts, Runtime *runtime, Grid *grid)
     #endif
 
     #if PHYSICS==HD || PHYSICS==RHD
+    #if HAVE_ENERGY
     print ("  Max(vc)   = % 0e  % 0e  % 0e  % 0e % 0e\n",
                vc_max[RHO], vc_max[VX1], vc_max[VX2], vc_max[VX3], vc_max[PRS]);
     print ("  Min(vc)   = % 0e  % 0e  % 0e  % 0e % 0e\n",
                vc_min[RHO], vc_min[VX1], vc_min[VX2], vc_min[VX3], vc_min[PRS]);
+    #else
+    print ("  Max(vc)   = % 0e  % 0e  % 0e  % 0e \n",
+               vc_max[RHO], vc_max[VX1], vc_max[VX2], vc_max[VX3]);
+    print ("  Min(vc)   = % 0e  % 0e  % 0e  % 0e \n",
+               vc_min[RHO], vc_min[VX1], vc_min[VX2], vc_min[VX3]);   
+    #endif
     #endif
 
 #else

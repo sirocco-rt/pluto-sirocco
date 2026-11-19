@@ -48,7 +48,7 @@
        WITH A THERMAL PLASMA: APPLICATION TO NON-RELATIVISTIC SHOCKS"\n
        Bai et al., ApJ (2015) 809, 55
 
-  \date   Apr 02, 2024
+  \date   May 22, 2025
 */
 /* ///////////////////////////////////////////////////////////////////// */
 #include "pluto.h"
@@ -171,6 +171,24 @@ void Particles_CR_Update(Data *data, timeStep *Dts, double dt, Grid *grid)
    -------------------------------------------------------- */
 
   #if PARTICLES_CR_NSUB > 0
+
+/* ---------------------------------------------------------
+    Synchronize particle inverse timestep across MPI ranks.
+    This is equivalent to using the minimum local particle dt.
+    It is needed because all ranks must use the same Nsub in
+    the particle subcycling loop.  --- nana
+    --------------------------------------------------------- */
+
+  #ifdef PARALLEL
+  {
+    double invdt_loc, invdt_glob;
+    invdt_loc = Dts->invDt_particles;
+    MPI_Allreduce(&invdt_loc, &invdt_glob, 1,
+                  MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+    Dts->invDt_particles = invdt_glob;
+  }
+  #endif
+
   Dts->Nsub_particles = MIN(ceil(dt*Dts->invDt_particles), PARTICLES_CR_NSUB);
   #if PARTICLES_CR_PREDICTOR == 2
   if (Dts->Nsub_particles > 2){

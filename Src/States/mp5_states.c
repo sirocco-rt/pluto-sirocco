@@ -7,7 +7,7 @@
   schemes of Suresh & Huynh (1997) or WENO-Z (Borges et al. 2008).
 
   \author A. Mignone (andrea.mignone@unito.it)
-  \date   Sep 06, 2024
+  \date   Apr 6, 2025
 
   \b References
      - "Accurate Monotonicity-Preserving Schemes with Runge-Kutta Time Stepping"
@@ -380,6 +380,7 @@ void States (const Sweep *sweep, int beg, int end, Grid *grid)
       vp[i][RHO] = v[i][RHO] + 0.5*dv_lim;
       vm[i][RHO] = v[i][RHO] - 0.5*dv_lim;
     }
+    #if HAVE_ENERGY
     if (vp[i][PRS] < 0.0 || vm[i][PRS] < 0.0){
       dvp = v[i+1][PRS] - v[i][PRS];
       dvm = v[i][PRS]   - v[i-1][PRS];
@@ -387,6 +388,7 @@ void States (const Sweep *sweep, int beg, int end, Grid *grid)
       vp[i][PRS] = v[i][PRS] + 0.5*dv_lim;
       vm[i][PRS] = v[i][PRS] - 0.5*dv_lim;
     }
+    #endif
   }
 
 /* ----------------------------------------------

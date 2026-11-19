@@ -13,7 +13,7 @@
 #ifndef PLUTO_H
 #define PLUTO_H
 
-#define PLUTO_VERSION  "4.4-patch3 (Sep 2024)"
+#define PLUTO_VERSION  "4.4-patch4 (Jun 2026)"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -40,7 +40,11 @@
 #define STRETCHED_GRID           2
 #define LOGARITHMIC_INC_GRID     3
 #define LOGARITHMIC_DEC_GRID     4
-#define RATIO_GRID               5
+#define RATIO_GRID               5  /* geometric ratio grid (PLUTO-SIROCCO) */
+
+/* ---- SIROCCO radiation driving labels ---- */
+
+#define SIROCCO_MODE        1
 
 /* ---- Equation of sweep (EoS) labels  ----  */
 
@@ -49,11 +53,6 @@
 #define TAUB          3
 #define BAROTROPIC    4
 #define ISOTHERMAL    5
-
-/* ---- SIROCCO radiation driving labels  ----  */
-
-#define SIROCCO_MODE        1
-// #define K_ALPHA_MODE        2
 
 /* ---- Entropy switch options ----- */
 
@@ -125,7 +124,7 @@
 #define TABULATED    6
 #define H2_COOL      7
 #define KROME	       8
-#define BLONDIN	     9
+#define BLONDIN      9
 
 /*----- Particle Labels ----- */
 
@@ -412,10 +411,10 @@
 #endif
 
 #ifndef FUNCTION_CLOCK_PROFILE
- #define FUNCTION_CLOCK_PROFILE  NO
+ #define FUNCTION_CLOCK_PROFILE  NO  
 #endif
 #ifndef FUNCTION_CLOCK_NSTEP
- #define FUNCTION_CLOCK_NSTEP  200
+ #define FUNCTION_CLOCK_NSTEP  200 
 #endif
 
 #ifndef GPLUTO_LOG            /* Enable this keyword if you intend to produce*/
@@ -492,7 +491,7 @@
  #define ROTATING_FRAME        NO
 #endif
 
-#ifndef SCALAR_ADVECTION
+#ifndef SCALAR_ADVECTION 
   #define SCALAR_ADVECTION     NO
 #endif
 
@@ -948,7 +947,7 @@ extern double g_inputParam[32];
 #else
  #define RADIATION_NR NO
  #define IRRADIATION  NO
-#endif
+#endif 
 
 #ifdef CHOMBO
  extern double glm_ch_max, glm_ch_max_loc, g_coeff_dl_min;
@@ -964,34 +963,6 @@ extern double g_inputParam[32];
   extern int d_indent;
   extern int d_condition;
 #endif
-
-/* ---- Line Driven Wind ---- */
-
-#if LINE_DRIVEN_WIND != NO
-
-	extern int NFLUX_ANGLES;
-	extern int MPOINTS;
-	extern double ****M_UV_fit;
-	extern double *t_fit;
-
-	extern double ****flux_r_UV;
-	extern double ****flux_t_UV;
-	extern double ****flux_p_UV;
-
-	extern double ****dvds_r_offset;
-	extern double ****dvds_t_offset;
-	extern double ****dvds_mod_offset;
-	extern double ****dvds_array;
-
-  extern double ****x11_interp;//
-  extern double ****x22_interp;//
-
-  extern int dvds_setup_flag;
-
-#endif
-
-
-
 
 /* ---- Maximum grid size for allocating static arrays ---- */
 
@@ -1014,6 +985,31 @@ extern double g_inputParam[32];
  #define NX1_MAX   NX1_TOT
  #define NX2_MAX   NX2_TOT
  #define NX3_MAX   NX3_TOT
+
+#endif
+
+/* ---- Line Driven Wind ---- */
+
+#if LINE_DRIVEN_WIND != NO
+
+  extern int    NFLUX_ANGLES;
+  extern int    MPOINTS;
+  extern double ****M_UV_fit;
+  extern double  *t_fit;
+
+  extern double ****flux_r_UV;
+  extern double ****flux_t_UV;
+  extern double ****flux_p_UV;
+
+  extern double ****dvds_r_offset;
+  extern double ****dvds_t_offset;
+  extern double ****dvds_mod_offset;
+  extern double ****dvds_array;
+
+  extern double ****x11_interp;
+  extern double ****x22_interp;
+
+  extern int    dvds_setup_flag;
 
 #endif
 

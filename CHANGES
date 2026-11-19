@@ -1,4 +1,56 @@
-CURRENT RELEASE: 4.4-patch3 (September 2024)
+================================================================================
+ PLUTO-SIROCCO v2.0  (August 2026)  --  based on PLUTO 4.4-patch4
+================================================================================
+
+ PLUTO-SIROCCO v1.0 ported onto PLUTO 4.4-patch4.  The coupling code itself is
+ UNCHANGED: every SIROCCO/CAK block is byte-identical to v1.0.  No fixes, no
+ switches, no new features.  Only the underlying PLUTO release differs.
+
+ MODIFIED CORE FILES (additions guarded by #if LINE_DRIVEN_WIND != NO)
+   Src/pluto.h                        RATIO_GRID, SIROCCO_MODE, BLONDIN labels;
+                                      LineDriven extern block
+   Src/structs.h                      Runtime.ratio[5]; 8 per-cell Data arrays
+   Src/prototypes.h                   6 LineDriven prototypes
+   Src/globals.h                      LineDriven global definitions
+   Src/initialize.c                   allocation of the LineDriven arrays
+   Src/main.c                         pre-loop SIROCCO flux / heatcool reads
+   Src/split_source.c                 BLONDIN branch -> BlondinCooling()
+   Src/Time_Stepping/update_stage.c   VGradCalc() before the sweep loop
+   Src/MHD/rhs_source.c               line-force injection in the i/j/k sweeps
+                                      (also serves HD, which shares this file
+                                      via VPATH)
+   Src/Cooling/cooling.h              BlondinCooling() / ne_rat() prototypes
+   Src/runtime_setup.c                "r" grid-token parser
+   Src/set_grid.c                     RATIO_GRID branch
+   Tools/Python/define_problem.py     LINE_DRIVEN_WIND and BLONDIN menu entries
+
+ NEW DIRECTORIES
+   Src/LineDriven/                    line_connect.c stub + makefile
+   Src/Cooling/BLONDIN/               cooling.c/.h stub + makefile
+   Test_Problems/LineDrivenWind/HD/   hydrodynamic case (v1.0 old/cv_ideal)
+   Test_Problems/LineDrivenWind/MHD/  magnetohydrodynamic case (dipole)
+   Test_Problems/LineDrivenWind/cak_v3/
+   Test_Problems/LineDrivenWind/Doc/
+
+ NOTE ON rhs_source.c
+   In v1.0 the problem directories each held a byte-identical copy of
+   Src/MHD/rhs_source.c.  Because the problem directory precedes VPATH, keeping
+   the v1.0 copies would have shadowed the core file and reverted every
+   patch4 change to the right-hand side.  HD/rhs_source.c and MHD/rhs_source.c
+   are therefore taken from the patch4 core, which carries the identical v1.0
+   SIROCCO blocks.  They are now the same file as the core and may be deleted.
+
+================================================================================
+
+
+CURRENT RELEASE: 4.4-patch4 (June 2026)
+
+**********************************************************
+*                CHANGES from 4.4-patch3
+*********************************************************
+
+- Improved hydro hllc for isothermal flow
+- Fixed bugs in particle dust module
 
 **********************************************************
 *                CHANGES from 4.4-patch2

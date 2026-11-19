@@ -1,17 +1,17 @@
 /* ///////////////////////////////////////////////////////////////////// */
-/*!
-  \file
+/*! 
+  \file  
   \brief Collects global variables definitions.
 
-  This file contains definitions for all global variables
-  (visible anywhere in the code) used by PLUTO.
-  Global variables names, by convention, are prefixed with a "g_"
-  unless they're used as constants throughout the code in which case
+  This file contains definitions for all global variables 
+  (visible anywhere in the code) used by PLUTO. 
+  Global variables names, by convention, are prefixed with a "g_" 
+  unless they're used as constants throughout the code in which case 
   they keep the full-capitalized notation typical of macros.
-
+  
   For modules, global variables are prefixed with the initial letters
   of the module name, e.g., \c sb_vy or \c glm_ch.
-
+  
   In the following "local" means "for the local processor".
   "Interior" means inside the computational domain.
 
@@ -33,17 +33,17 @@
 
 int prank; /**< Processor rank. In serial mode it is defined to be 0. */
 
-long int IBEG; /**< Lower grid index of the computational domain in the
+long int IBEG; /**< Lower grid index of the computational domain in the 
                     the X1 direction for the local processor. */
-long int IEND; /**< Upper grid index of the computational domain in the
+long int IEND; /**< Upper grid index of the computational domain in the 
                     the X1 direction for the local processor. */
-long int JBEG; /**< Lower grid index of the computational domain in the
+long int JBEG; /**< Lower grid index of the computational domain in the 
                     the X2 direction for the local processor. */
-long int JEND; /**< Upper grid index of the computational domain in the
+long int JEND; /**< Upper grid index of the computational domain in the 
                     the X2 direction for the local processor. */
-long int KBEG; /**< Lower grid index of the computational domain in the
+long int KBEG; /**< Lower grid index of the computational domain in the 
                     the X3 direction for the local processor. */
-long int KEND; /**< Upper grid index of the computational domain in the
+long int KEND; /**< Upper grid index of the computational domain in the 
                     the X3 direction for the local processor. */
 
 long int NX1; /**< Number of interior zones in the X1 directions (boundaries
@@ -60,21 +60,21 @@ long int NX2_TOT; /**< Total number of zones in the X2 direction (boundaries
 long int NX3_TOT; /**< Total number of zones in the X3 direction (boundaries
                        \e included) for the local processor.*/
 
-long int NMAX_POINT;  /**< Maximum number of points among the three
+long int NMAX_POINT;  /**< Maximum number of points among the three 
                            directions, boundaries \a excluded.*/
 
 /*! \name Direction-dependent Vector Labels
-    Vector indices permuted during sweeps are used to distinguish between
+    Vector indices permuted during sweeps are used to distinguish between 
     normal ("n"), tangent ("t") and binormal ("b") directions.
     In vector notations, \f$ \hvec{b} = \hvec{n} \times \hvec{t} \f$, they
     form a right-handed triad.
-    Values are set in the SetIndex() function before commencing
+    Values are set in the SetIndex() function before commencing 
     integration.                                                        */
 /**@{ */
-int VXn, VXt, VXb;
-int MXn, MXt, MXb;
-int BXn, BXt, BXb;
-int EXn, EXt, EXb;
+int VXn, VXt, VXb;  
+int MXn, MXt, MXb;  
+int BXn, BXt, BXb;  
+int EXn, EXt, EXb;  
 #if DUST_FLUID == YES
   int VXn_D, VXt_D, VXb_D;
   int MXn_D, MXt_D, MXb_D;
@@ -84,16 +84,16 @@ int EXn, EXt, EXb;
 #endif
 
 /**@} */
-
+               
 int g_i; /**<  x1 grid index when sweeping along the x2 or x3 direction. */
 int g_j; /**<  x2 grid index when sweeping along the x1 or x3 direction. */
 int g_k; /**<  x3 grid index when sweeping along the x1 or x2 direction. */
 
-int g_dir; /**< Specifies the current sweep or direction of integration.
-                Its value is set usually in the time stepping functions
+int g_dir; /**< Specifies the current sweep or direction of integration. 
+                Its value is set usually in the time stepping functions 
                 and can take the values
-                - IDIR, for integration in the X1 dir;
-                - JDIR, for integration in the X2 dir;
+                - IDIR, for integration in the X1 dir; 
+                - JDIR, for integration in the X2 dir; 
                 - KDIR, for integration in the X3 dir; */
 
 double g_dt;       /**< The current integration time step. */
@@ -101,20 +101,20 @@ double g_dt;       /**< The current integration time step. */
 int    g_intStage;    /**< Gives the current integration stage of the time
                              stepping method (predictor = 0, 1st
                              corrector = 1, and so on). */
-double g_maxCoolingRate = 0.1;  /**< The maximum fractional variation due to
+double g_maxCoolingRate = 0.1;  /**< The maximum fractional variation due to 
                                      cooling from one step to the next. */
 double g_minCoolingTemp = 50.0; /**< The minimum temperature (in K) below which
                                      cooling is suppressed. */
 
-int    g_maxIMEXIter;     /**< Maximum number if iterations in IMEX scheme */
-int    g_maxRiemannIter;  /**< Maximum number of iterations for
+int    g_maxIMEXIter;     /**< Maximum number if iterations in IMEX scheme */    
+int    g_maxRiemannIter;  /**< Maximum number of iterations for 
                                  iterative Riemann Solver.       */
 int    g_maxRootIter;     /**< Maximum number of iterations for root finder */
 int    g_nprocs;          /**< The total number of processors */
-
+                                    
 double g_smallDensity  = 1.e-12; /**< Small value for density fix. */
 double g_smallPressure = 1.e-12; /**< Small value for pressure fix. */
-#if EOS == IDEAL
+#if EOS == IDEAL 
  double g_gamma = 5./3.;
 #elif EOS == ISOTHERMAL
  double g_isoSoundSpeed = 1.0; /* g_isoSoundSpeed */
@@ -147,15 +147,15 @@ double g_domEnd[3];  /**< Upper limits of the computational domain. */
 /* g_inputParam is an array containing the user-defined
    parameters     */
 
-double g_inputParam[32]; /**< Array containing the user-defined parameters.
+double g_inputParam[32]; /**< Array containing the user-defined parameters. 
                               The index names of this array are defined in
                               definitions.h through the python interface. */
 #ifdef CH_SPACEDIM
- double glm_ch_max, glm_ch_max_loc, g_coeff_dl_min;
-        /**< Variables used by Chombo to compute glm_ch. They must be
+ double glm_ch_max, glm_ch_max_loc, g_coeff_dl_min; 
+        /**< Variables used by Chombo to compute glm_ch. They must be 
              always declared since Chombo does not define GLM_MHD */
 
- double g_level_dx; /**< Global variable to pass m_dx ivalue
+ double g_level_dx; /**< Global variable to pass m_dx ivalue 
                        (C++ Chombo library value) to C Pluto functions */
  double g_x2stretch, g_x3stretch; /**< Grid spacing stretch factor */
  #ifdef GLM_MHD
@@ -180,33 +180,33 @@ double g_inputParam[32]; /**< Array containing the user-defined parameters.
   long int p_idCounter = 0;     /**< Total number of particle ids created since
                                       beginning [global] */
   int p_nrestart   = 0;
- #ifdef PARALLEL
+ #ifdef PARALLEL   
   MPI_Datatype MPI_PARTICLE;
   MPI_Datatype PartOutputType;
  #endif
-#endif
 
 /* ---- Line Driven Wind ---- */
 
 #if LINE_DRIVEN_WIND != NO
 
-    int NFLUX_ANGLES;
-    int MPOINTS;
-    double ****M_UV_fit;
-    double *t_fit;
+  int    NFLUX_ANGLES;
+  int    MPOINTS;
+  double ****M_UV_fit;
+  double  *t_fit;
 
-    double ****flux_r_UV;
-    double ****flux_t_UV;
-    double ****flux_p_UV;
+  double ****flux_r_UV;
+  double ****flux_t_UV;
+  double ****flux_p_UV;
 
-    double ****dvds_r_offset;
-    double ****dvds_t_offset;
-    double ****dvds_mod_offset;
-    double ****dvds_array;
+  double ****dvds_r_offset;
+  double ****dvds_t_offset;
+  double ****dvds_mod_offset;
+  double ****dvds_array;
 
-    double ****x11_interp;//
-    double ****x22_interp;//
+  double ****x11_interp;
+  double ****x22_interp;
 
-    int dvds_setup_flag;//
+  int    dvds_setup_flag;
 
 #endif
+#endif	

@@ -169,6 +169,7 @@ void Flux (const State *state, int beg, int end)
     fx[MX2] = v[VXn]*u[MX2] - v[BXn]*v[BX2];
     fx[MX3] = v[VXn]*u[MX3] - v[BXn]*v[BX3];
 
+
     fx[BXn] = 0.0;
     fx[BXt] = v[VXn]*v[BXt] - v[BXn]*v[VXt];
     fx[BXb] = v[VXn]*v[BXb] - v[BXn]*v[VXb];

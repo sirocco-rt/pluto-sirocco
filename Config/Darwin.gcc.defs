@@ -25,7 +25,7 @@ endif
 #######################################
 
 ifeq ($(strip $(USE_HDF5)), TRUE)
- HDF5_LIB = /usr/local/lib/HDF5-serial
+ HDF5_LIB = /usr/local/
  INCLUDE_DIRS += -I$(HDF5_LIB)/include
  LDFLAGS      += -L$(HDF5_LIB)/lib -lhdf5 -lz
 endif

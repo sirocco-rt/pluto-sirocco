@@ -1,0 +1,5 @@
+
+Startup correction: the driver uses pluto -maxsteps 0 for data.0000.dbl
+and checks the exit code before SIROCCO. data.0001.dbl belongs to the
+first coupled advance after initial SIROCCO/CAK. Inspect pluto_log_init
+for startup errors; a written initial file does not make a failed launch valid.
